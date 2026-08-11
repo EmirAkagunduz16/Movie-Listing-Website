@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { watch, computed } from 'vue'
 import { storeToRefs } from 'pinia'
-import MovieListLayout from '@/components/MovieListLayout.vue'
+import MovieListLayout from '@/components/layout/MovieListLayout.vue'
 import { useMovieStore } from '@/stores/movieStore'
 import { MOVIE_CATEGORIES } from '@/constants/categories'
 import type { MovieCategory } from '@/types'

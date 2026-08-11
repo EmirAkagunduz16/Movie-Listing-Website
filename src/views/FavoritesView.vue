@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
-import MovieListLayout from '@/components/MovieListLayout.vue'
+import MovieListLayout from '@/components/layout/MovieListLayout.vue'
 import { useMovieStore } from '@/stores/movieStore'
 import { HeartIcon, FilmIcon } from '@heroicons/vue/24/outline'
 

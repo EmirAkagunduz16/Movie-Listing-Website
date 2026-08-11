@@ -2,7 +2,7 @@
 import { watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import MovieListLayout from '@/components/MovieListLayout.vue'
+import MovieListLayout from '@/components/layout/MovieListLayout.vue'
 import { useMovieStore } from '@/stores/movieStore'
 import { MagnifyingGlassIcon, FilmIcon } from '@heroicons/vue/24/outline'
 

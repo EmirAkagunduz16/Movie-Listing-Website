@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import Navbar from '@/components/Navbar.vue'
-import HeroSection from '@/components/HeroSection.vue'
-import MovieCard from '@/components/MovieCard.vue'
-import SkeletonLoader from '@/components/SkeletonLoader.vue'
-import ErrorMessage from '@/components/ErrorMessage.vue'
-import Pagination from '@/components/Pagination.vue'
-import AppFooter from '@/components/AppFooter.vue'
+import Navbar from '@/components/layout/Navbar.vue'
+import HeroSection from '@/components/shared/HeroSection.vue'
+import MovieCard from '@/components/movie/MovieCard.vue'
+import SkeletonLoader from '@/components/shared/SkeletonLoader.vue'
+import ErrorMessage from '@/components/shared/ErrorMessage.vue'
+import Pagination from '@/components/shared/Pagination.vue'
+import AppFooter from '@/components/layout/AppFooter.vue'
 import type { Movie } from '@/types'
 
 defineProps<{
