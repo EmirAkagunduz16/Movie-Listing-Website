@@ -2,13 +2,22 @@ import type { Movie, TMDBResponse, MovieCategory } from "@/types";
 import { MOVIE_CATEGORIES } from "@/constants/categories";
 import { axiosClient } from "./api";
 
+/**
+ * Fetches movies by category (popular, top_rated, upcoming, now_playing) from TMDB API.
+ * @param category - Category key
+ * @param page - Page number (defaults to 1)
+ */
 export async function getMoviesByCategory(
   category: MovieCategory = "popular",
   page: number = 1,
 ): Promise<TMDBResponse<Movie>> {
   const config = MOVIE_CATEGORIES[category] || MOVIE_CATEGORIES.popular;
   const response = await axiosClient.get<TMDBResponse<Movie>>(config.endpoint, {
-    params: { page },
+    params: {
+      page,
+      language: "en-US",
+      region: "US",
+    },
   });
 
   return response.data;

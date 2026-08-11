@@ -1,11 +1,11 @@
 /**
- * Formats date string into locale date format.
+ * Formats date string into locale date format (en-US).
  */
 export function formatDate(dateStr: string | null | undefined): string {
   if (!dateStr) return 'N/A'
   const date = new Date(dateStr)
   if (isNaN(date.getTime())) return 'N/A'
-  return date.toLocaleDateString('tr-TR', { year: 'numeric', month: 'short', day: 'numeric' })
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
 }
 
 /**
