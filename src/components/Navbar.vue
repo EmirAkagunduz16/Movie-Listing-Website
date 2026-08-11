@@ -1,14 +1,20 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon, FilmIcon } from '@heroicons/vue/24/outline'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { RouterLink, useRoute } from 'vue-router'
+import { MOVIE_CATEGORIES } from '@/constants/categories'
 
-const navigation = [
-  { name: 'Popular', href: '#', current: true },
-  { name: 'Top Rated', href: '#', current: false },
-  { name: 'Upcoming', href: '#', current: false },
-  { name: 'Now Playing', href: '#', current: false },
-]
+const route = useRoute()
+
+// Dynamically generate navigation links from MOVIE_CATEGORIES constants
+const navigation = computed(() =>
+  Object.values(MOVIE_CATEGORIES).map((item) => ({
+    name: item.title.replace(' Movies', ''),
+    href: item.path,
+    current: route.path === item.path,
+  }))
+)
 
 const searchQuery = ref('')
 const showSearch = ref(false)
@@ -31,19 +37,19 @@ const showSearch = ref(false)
         <!-- Logo + Nav Links -->
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
           <!-- Logo -->
-          <div class="flex shrink-0 items-center gap-2">
+          <RouterLink to="/" class="flex shrink-0 items-center gap-2">
             <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600">
               <FilmIcon class="size-5 text-white" aria-hidden="true" />
             </div>
             <span class="text-white font-bold text-lg tracking-tight">CineVault</span>
-          </div>
+          </RouterLink>
 
           <!-- Nav Links -->
           <div class="hidden sm:ml-8 sm:flex sm:items-center sm:space-x-1">
-            <a
+            <RouterLink
               v-for="item in navigation"
               :key="item.name"
-              :href="item.href"
+              :to="item.href"
               :class="[
                 item.current
                   ? 'bg-indigo-600 text-white'
@@ -53,7 +59,7 @@ const showSearch = ref(false)
               :aria-current="item.current ? 'page' : undefined"
             >
               {{ item.name }}
-            </a>
+            </RouterLink>
           </div>
         </div>
 
@@ -95,17 +101,20 @@ const showSearch = ref(false)
         <DisclosureButton
           v-for="item in navigation"
           :key="item.name"
-          as="a"
-          :href="item.href"
-          :class="[
-            item.current
-              ? 'bg-indigo-600 text-white'
-              : 'text-gray-300 hover:bg-gray-800 hover:text-white',
-            'block rounded-md px-3 py-2 text-base font-medium transition-colors'
-          ]"
-          :aria-current="item.current ? 'page' : undefined"
+          as="template"
         >
-          {{ item.name }}
+          <RouterLink
+            :to="item.href"
+            :class="[
+              item.current
+                ? 'bg-indigo-600 text-white'
+                : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+              'block rounded-md px-3 py-2 text-base font-medium transition-colors'
+            ]"
+            :aria-current="item.current ? 'page' : undefined"
+          >
+            {{ item.name }}
+          </RouterLink>
         </DisclosureButton>
         <!-- Mobile Search -->
         <div class="mt-2 px-1">

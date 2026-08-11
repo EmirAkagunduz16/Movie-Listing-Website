@@ -1,125 +1,70 @@
 <script setup lang="ts">
 import Navbar from '@/components/Navbar.vue'
 import MovieCard from '@/components/MovieCard.vue'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
-import { ref } from 'vue'
+import { ChevronLeftIcon, ChevronRightIcon, ArrowPathIcon } from '@heroicons/vue/24/solid'
+import { watch, computed } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useMovieStore } from '@/stores/movieStore'
+import { MOVIE_CATEGORIES } from '@/constants/categories'
+import type { MovieCategory } from '@/types'
 
-// Mock film verisi (TMDB yapısına uygun)
-const mockMovies = [
+const props = withDefaults(
+  defineProps<{
+    category?: MovieCategory
+    title?: string
+    subtitle?: string
+  }>(),
   {
-    id: 1,
-    title: 'Oppenheimer',
-    poster_path: '/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg',
-    release_date: '2023-07-19',
-    vote_average: 8.2,
-    overview: 'The story of J. Robert Oppenheimer\'s role in the development of the atomic bomb during World War II.'
-  },
-  {
-    id: 2,
-    title: 'Dune: Part Two',
-    poster_path: '/1pdfLvkbY9ohJlCjQH2CZjjYVvJ.jpg',
-    release_date: '2024-03-01',
-    vote_average: 8.5,
-    overview: 'Follow the mythic journey of Paul Atreides as he unites with Chani and the Fremen while on a path of revenge against the conspirators who destroyed his family.'
-  },
-  {
-    id: 3,
-    title: 'Poor Things',
-    poster_path: '/kCGlIMHnOm8JPXIR2CExovgDNs3.jpg',
-    release_date: '2023-12-08',
-    vote_average: 7.8,
-    overview: 'The incredible tale about the fantastical evolution of Bella Baxter, a young woman brought back to life by the brilliant and unorthodox scientist Dr. Godwin Baxter.'
-  },
-  {
-    id: 4,
-    title: 'The Zone of Interest',
-    poster_path: '/hUu9zyZmKuXA4ceqHhtPBmpoaTR.jpg',
-    release_date: '2023-12-15',
-    vote_average: 7.4,
-    overview: 'A Nazi officer and his wife build their dream life next to the walls of Auschwitz.'
-  },
-  {
-    id: 5,
-    title: 'Past Lives',
-    poster_path: '/k3waqVXCBRSLQ5XHJT3ycCUJoN7.jpg',
-    release_date: '2023-06-02',
-    vote_average: 8.0,
-    overview: 'Two childhood friends are separated when one of their families emigrates. Years later, they reunite in New York to reflect on their lives and the choices that shaped their paths.'
-  },
-  {
-    id: 6,
-    title: 'Maestro',
-    poster_path: '/qH5RecTZnBRSYHYmQ8ygD5jQB1H.jpg',
-    release_date: '2023-12-20',
-    vote_average: 6.8,
-    overview: 'A towering and fearless love story chronicling the lifelong relationship between Leonard Bernstein and Felicia Montealegre Cohn Bernstein.'
-  },
-  {
-    id: 7,
-    title: 'Killers of the Flower Moon',
-    poster_path: '/dB6KgOAKMQNTm3JGFV6HuSi5SBp.jpg',
-    release_date: '2023-10-20',
-    vote_average: 7.6,
-    overview: 'Members of the Osage tribe in the United States are murdered under mysterious circumstances in the 1920s, sparking a major FBI investigation.'
-  },
-  {
-    id: 8,
-    title: 'Saltburn',
-    poster_path: '/qjhahNLSZ705B5JP92YMEYPocPz.jpg',
-    release_date: '2023-11-22',
-    vote_average: 7.1,
-    overview: 'A student at Oxford University finds himself drawn into the world of a charming and aristocratic classmate, who invites him to his eccentric family\'s sprawling estate for a summer.'
-  },
-  {
-    id: 9,
-    title: 'American Fiction',
-    poster_path: '/9ssEkeqQgEBcXfMF6DVf0sPi8yN.jpg',
-    release_date: '2023-12-15',
-    vote_average: 7.5,
-    overview: 'A novelist who\'s fed up with the establishment profiting from Black entertainment uses a pen name to write a book that propels him to the heart of hypocrisy and self-discovery.'
-  },
-  {
-    id: 10,
-    title: 'The Holdovers',
-    poster_path: '/VHmqX6MBpAr7n3hKhFBVlFXZQaF.jpg',
-    release_date: '2023-11-10',
-    vote_average: 7.9,
-    overview: 'A curmudgeonly professor at a New England prep school is forced to remain on campus during winter break and he soon bonds with the school\'s head cook and a student who has nowhere to go.'
-  },
-  {
-    id: 11,
-    title: 'Society of the Snow',
-    poster_path: '/2e853GW8yKzb26cJmf4GDqbw0OX.jpg',
-    release_date: '2024-01-04',
-    vote_average: 7.8,
-    overview: 'On October 13, 1972, a plane carrying a Uruguayan rugby team crashes in the snow-covered Andes mountains.'
-  },
-  {
-    id: 12,
-    title: 'The Beekeeper',
-    poster_path: '/A7EByudX0eOzlkQ2FIbogzyazm2.jpg',
-    release_date: '2024-01-12',
-    vote_average: 6.9,
-    overview: 'One man\'s crusade for vengeance takes on national stakes after he is revealed to be a former operative of a powerful and clandestine organization known as Beekeepers.'
-  },
-]
+    category: 'popular',
+  }
+)
 
-const currentPage = ref(1)
-const totalPages = ref(10)
+const activeCategoryConfig = computed(() => {
+  return MOVIE_CATEGORIES[props.category] || MOVIE_CATEGORIES.popular
+})
 
-function prevPage() {
-  if (currentPage.value > 1) currentPage.value--
+const pageTitle = computed(() => props.title || activeCategoryConfig.value.title)
+const pageSubtitle = computed(() => props.subtitle || activeCategoryConfig.value.subtitle)
+
+const movieStore = useMovieStore()
+const { movies, loading, error, currentPage, totalPages } = storeToRefs(movieStore)
+
+// Watch category prop and fetch movies dynamically
+watch(
+  () => props.category,
+  (newCategory) => {
+    movieStore.fetchMovies(newCategory, 1)
+  },
+  { immediate: true }
+)
+
+function changePage(page: number) {
+  if (page >= 1 && page <= totalPages.value) {
+    movieStore.fetchMovies(props.category, page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 }
 
-function nextPage() {
-  if (currentPage.value < totalPages.value) currentPage.value++
-}
+// Calculate dynamic page numbers for pagination
+const visiblePages = computed(() => {
+  const current = currentPage.value
+  const max = totalPages.value
+  const pages: number[] = []
 
-function goToPage(page: number) {
-  currentPage.value = page
-}
+  let start = Math.max(1, current - 2)
+  let end = Math.min(max, start + 4)
 
-const visiblePages = [1, 2, 3, 4, 5]
+  if (end - start < 4) {
+    start = Math.max(1, end - 4)
+  }
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
+})
+
+const lastVisiblePage = computed(() => visiblePages.value[visiblePages.value.length - 1] ?? 0)
 </script>
 
 <template>
@@ -133,10 +78,10 @@ const visiblePages = [1, 2, 3, 4, 5]
         <div class="max-w-2xl">
           <p class="text-indigo-400 text-sm font-semibold tracking-widest uppercase mb-3">Discover</p>
           <h1 class="text-4xl sm:text-5xl font-bold text-white leading-tight mb-4">
-            Popular Movies
+            {{ pageTitle }}
           </h1>
           <p class="text-gray-400 text-lg leading-relaxed">
-            Explore the most-watched films across the globe. Find your next favorite movie.
+            {{ pageSubtitle }}
           </p>
         </div>
       </div>
@@ -149,25 +94,48 @@ const visiblePages = [1, 2, 3, 4, 5]
       <div class="flex items-center justify-between mb-8">
         <div class="flex items-center gap-3">
           <div class="w-1 h-7 bg-indigo-500 rounded-full"></div>
-          <h2 class="text-xl font-bold text-white">Popular Right Now</h2>
+          <h2 class="text-xl font-bold text-white">{{ pageTitle }}</h2>
         </div>
-        <span class="text-sm text-gray-500">{{ mockMovies.length }} films</span>
+        <span class="text-sm text-gray-500" v-if="!loading">{{ movies.length }} films on page</span>
+      </div>
+
+      <!-- Loading State (Skeleton Grid) -->
+      <div v-if="loading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div v-for="i in 12" :key="i" class="bg-gray-900 rounded-xl overflow-hidden animate-pulse border border-gray-800">
+          <div class="aspect-[2/3] bg-gray-800"></div>
+          <div class="p-3 space-y-2">
+            <div class="h-4 bg-gray-800 rounded w-3/4"></div>
+            <div class="h-3 bg-gray-800 rounded w-1/2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error State -->
+      <div v-else-if="error" class="flex flex-col items-center justify-center py-16 bg-gray-900/50 rounded-2xl border border-gray-800">
+        <p class="text-red-400 text-lg mb-4">{{ error }}</p>
+        <button
+          @click="movieStore.fetchMovies(props.category, currentPage)"
+          class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white font-medium transition-colors"
+        >
+          <ArrowPathIcon class="size-4" />
+          <span>Tekrar Deneyin</span>
+        </button>
       </div>
 
       <!-- Movie Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+      <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
         <MovieCard
-          v-for="movie in mockMovies"
+          v-for="movie in movies"
           :key="movie.id"
           :movie="movie"
         />
       </div>
 
       <!-- Pagination -->
-      <div class="mt-12 flex items-center justify-center gap-2">
+      <div v-if="!loading && !error && totalPages > 1" class="mt-12 flex items-center justify-center gap-2">
         <!-- Prev Button -->
         <button
-          @click="prevPage"
+          @click="changePage(currentPage - 1)"
           :disabled="currentPage === 1"
           class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gray-800 text-gray-300 text-sm font-medium border border-gray-700 hover:bg-gray-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
         >
@@ -180,7 +148,7 @@ const visiblePages = [1, 2, 3, 4, 5]
           <button
             v-for="page in visiblePages"
             :key="page"
-            @click="goToPage(page)"
+            @click="changePage(page)"
             :class="[
               'w-9 h-9 rounded-lg text-sm font-semibold transition-all duration-150',
               currentPage === page
@@ -190,9 +158,10 @@ const visiblePages = [1, 2, 3, 4, 5]
           >
             {{ page }}
           </button>
-          <span class="text-gray-600 px-1">...</span>
+          <span v-if="lastVisiblePage < totalPages" class="text-gray-600 px-1">...</span>
           <button
-            @click="goToPage(totalPages)"
+            v-if="lastVisiblePage < totalPages"
+            @click="changePage(totalPages)"
             :class="[
               'w-9 h-9 rounded-lg text-sm font-semibold transition-all duration-150',
               currentPage === totalPages
@@ -206,7 +175,7 @@ const visiblePages = [1, 2, 3, 4, 5]
 
         <!-- Next Button -->
         <button
-          @click="nextPage"
+          @click="changePage(currentPage + 1)"
           :disabled="currentPage === totalPages"
           class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gray-800 text-gray-300 text-sm font-medium border border-gray-700 hover:bg-gray-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
         >
@@ -216,7 +185,7 @@ const visiblePages = [1, 2, 3, 4, 5]
       </div>
 
       <!-- Page info -->
-      <p class="mt-4 text-center text-xs text-gray-600">
+      <p v-if="!loading && !error" class="mt-4 text-center text-xs text-gray-600">
         Page {{ currentPage }} of {{ totalPages }}
       </p>
 

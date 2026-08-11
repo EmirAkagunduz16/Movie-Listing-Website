@@ -1,30 +1,11 @@
 <script setup lang="ts">
 import { StarIcon, CalendarIcon } from '@heroicons/vue/24/solid'
-
-interface Movie {
-  id: number
-  title: string
-  poster_path: string | null
-  release_date: string
-  vote_average: number
-  overview: string
-}
+import type { Movie } from '@/types'
+import { formatDate, getRatingColor, getTMDBImageUrl } from '@/utils/formatters'
 
 defineProps<{
   movie: Movie
 }>()
-
-function getRatingColor(rating: number): string {
-  if (rating >= 7.5) return 'text-green-400'
-  if (rating >= 6) return 'text-yellow-400'
-  return 'text-red-400'
-}
-
-function formatDate(dateStr: string): string {
-  if (!dateStr) return 'N/A'
-  const date = new Date(dateStr)
-  return date.toLocaleDateString('tr-TR', { year: 'numeric', month: 'short', day: 'numeric' })
-}
 </script>
 
 <template>
@@ -33,7 +14,7 @@ function formatDate(dateStr: string): string {
     <div class="relative aspect-[2/3] overflow-hidden bg-gray-800">
       <img
         v-if="movie.poster_path"
-        :src="`https://image.tmdb.org/t/p/w500${movie.poster_path}`"
+        :src="getTMDBImageUrl(movie.poster_path)!"
         :alt="movie.title"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
