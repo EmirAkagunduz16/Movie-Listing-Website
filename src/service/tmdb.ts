@@ -30,6 +30,26 @@ export async function getMovieDetails(
   return response.data;
 }
 
+/**
+ * Searches movies by title keyword query from TMDB API.
+ * @param query - Search keyword
+ * @param page - Page number (defaults to 1)
+ */
+export async function searchMovies(
+  query: string,
+  page: number = 1,
+): Promise<TMDBResponse<Movie>> {
+  const response = await axiosClient.get<TMDBResponse<Movie>>("/search/movie", {
+    params: {
+      query,
+      page,
+      language: "en-US",
+    },
+  });
+
+  return response.data;
+}
+
 // Convenience helper aliases
 export const getPopularMovies = (page = 1) =>
   getMoviesByCategory("popular", page);

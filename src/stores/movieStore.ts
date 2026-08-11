@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { getMoviesByCategory, getMovieDetails } from "@/service/tmdb";
+import { getMoviesByCategory, getMovieDetails, searchMovies } from "@/service/tmdb";
 import { getFavoriteMoviesFromStorage, saveFavoriteMoviesToStorage } from "@/utils/storage";
 import type { Movie, MovieDetail, MovieCategory } from "@/types";
 
@@ -14,6 +14,14 @@ export const useMovieStore = defineStore("movie", () => {
   const currentPage = ref(1);
   const totalPages = ref(1);
   const activeCategory = ref<MovieCategory>("popular");
+
+  // Search State
+  const searchResults = ref<Movie[]>([]);
+  const searchQuery = ref("");
+  const searchLoading = ref(false);
+  const searchCurrentPage = ref(1);
+  const searchTotalPages = ref(1);
+  const searchTotalResults = ref(0);
 
   // Favorite Movies persisted in LocalStorage
   const favoriteMovies = ref<Movie[]>(getFavoriteMoviesFromStorage());
@@ -53,6 +61,30 @@ export const useMovieStore = defineStore("movie", () => {
     }
   }
 
+  async function performSearch(query: string, page: number = 1) {
+    if (!query.trim()) {
+      searchResults.value = [];
+      searchTotalResults.value = 0;
+      return;
+    }
+
+    searchLoading.value = true;
+    error.value = null;
+    searchQuery.value = query;
+
+    try {
+      const data = await searchMovies(query, page);
+      searchResults.value = data.results;
+      searchCurrentPage.value = data.page;
+      searchTotalPages.value = Math.min(data.total_pages, 500);
+      searchTotalResults.value = data.total_results;
+    } catch (err: any) {
+      error.value = err?.message || "Search failed. Please try again.";
+    } finally {
+      searchLoading.value = false;
+    }
+  }
+
   function toggleFavorite(movie: Movie) {
     const index = favoriteMovies.value.findIndex((m) => m.id === movie.id);
     if (index > -1) {
@@ -76,10 +108,17 @@ export const useMovieStore = defineStore("movie", () => {
     currentPage,
     totalPages,
     activeCategory,
+    searchResults,
+    searchQuery,
+    searchLoading,
+    searchCurrentPage,
+    searchTotalPages,
+    searchTotalResults,
     favoriteMovies,
     favoriteCount,
     fetchMovies,
     fetchMovieDetails,
+    performSearch,
     toggleFavorite,
     isFavorite,
   };

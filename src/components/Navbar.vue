@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon, FilmIcon, HeartIcon } from '@heroicons/vue/24/outline'
-import { ref, computed } from 'vue'
-import { RouterLink, useRoute } from 'vue-router'
+import { ref, computed, watch } from 'vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { MOVIE_CATEGORIES } from '@/constants/categories'
 import { useMovieStore } from '@/stores/movieStore'
 import { storeToRefs } from 'pinia'
 
 const route = useRoute()
+const router = useRouter()
 const movieStore = useMovieStore()
 const { favoriteCount } = storeToRefs(movieStore)
 
@@ -20,8 +21,35 @@ const navigation = computed(() =>
   }))
 )
 
-const searchQuery = ref('')
-const showSearch = ref(false)
+const searchQuery = ref((route.query.q as string) || '')
+const showSearch = ref(Boolean(route.query.q))
+
+watch(
+  () => route.query.q,
+  (newQ) => {
+    if (typeof newQ === 'string') {
+      searchQuery.value = newQ
+      showSearch.value = true
+    }
+  }
+)
+
+function onSearchSubmit() {
+  const query = searchQuery.value.trim()
+  if (query) {
+    router.push({
+      path: '/search',
+      query: { q: query },
+    })
+  }
+}
+
+function toggleSearchInput() {
+  showSearch.value = !showSearch.value
+  if (!showSearch.value && route.path === '/search') {
+    searchQuery.value = ''
+  }
+}
 </script>
 
 <template>
@@ -91,32 +119,34 @@ const showSearch = ref(false)
           </RouterLink>
 
           <!-- Search Bar & Toggle Button -->
-          <div class="relative flex items-center">
+          <form @submit.prevent="onSearchSubmit" class="relative flex items-center">
             <transition
               enter-active-class="transition ease-out duration-200"
               enter-from-class="opacity-0 w-0"
-              enter-to-class="opacity-100 w-48"
+              enter-to-class="opacity-100 w-48 sm:w-64"
               leave-active-class="transition ease-in duration-150"
-              leave-from-class="opacity-100 w-48"
+              leave-from-class="opacity-100 w-48 sm:w-64"
               leave-to-class="opacity-0 w-0"
             >
               <input
                 v-if="showSearch"
                 v-model="searchQuery"
                 type="text"
-                placeholder="Search movies..."
-                class="mr-2 overflow-hidden bg-gray-800 text-white text-sm rounded-lg px-3 py-1.5 border border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-gray-500 w-48"
+                placeholder="Search movies by title..."
+                class="mr-2 overflow-hidden bg-gray-800 text-white text-sm rounded-lg px-3 py-1.5 border border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-gray-500 w-48 sm:w-64"
                 autofocus
+                @keydown.enter="onSearchSubmit"
               />
             </transition>
             <button
-              @click="showSearch = !showSearch"
+              type="button"
+              @click="toggleSearchInput"
               class="rounded-full p-2 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
               title="Search"
             >
               <MagnifyingGlassIcon class="size-5" aria-hidden="true" />
             </button>
-          </div>
+          </form>
         </div>
 
       </div>
@@ -143,14 +173,17 @@ const showSearch = ref(false)
             {{ item.name }}
           </RouterLink>
         </DisclosureButton>
-        <!-- Mobile Search -->
-        <div class="mt-2 px-1">
+
+        <!-- Mobile Search Form -->
+        <form @submit.prevent="onSearchSubmit" class="mt-2 px-1">
           <input
+            v-model="searchQuery"
             type="text"
             placeholder="Search movies..."
             class="w-full bg-gray-800 text-white text-sm rounded-lg px-3 py-2 border border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-gray-500"
+            @keydown.enter="onSearchSubmit"
           />
-        </div>
+        </form>
       </div>
     </DisclosurePanel>
   </Disclosure>
