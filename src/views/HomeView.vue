@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { watch, computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import MovieListLayout from '@/components/layout/MovieListLayout.vue'
 import { useMovieStore } from '@/stores/movieStore'
@@ -17,29 +18,36 @@ const props = withDefaults(
   }
 )
 
+const route = useRoute()
+const router = useRouter()
+
 const activeCategoryConfig = computed(() => MOVIE_CATEGORIES[props.category] || MOVIE_CATEGORIES.popular)
 const pageTitle = computed(() => props.title || activeCategoryConfig.value.title)
 const pageSubtitle = computed(() => props.subtitle || activeCategoryConfig.value.subtitle)
 
+// Read current page from URL query param (?page=X), fallback to 1
+const pageParam = computed(() => Number(route.query.page) || 1)
+
 const movieStore = useMovieStore()
 const { movies, loading, error, currentPage, totalPages } = storeToRefs(movieStore)
 
-// Watch category prop and fetch movies dynamically
+// Watch both category and URL page param — fetch when either changes
 watch(
-  () => props.category,
-  (newCategory) => {
-    movieStore.fetchMovies(newCategory, 1)
+  [() => props.category, pageParam],
+  ([newCategory, newPage]) => {
+    movieStore.fetchMovies(newCategory, newPage)
   },
   { immediate: true }
 )
 
 function onPageChange(page: number) {
-  movieStore.fetchMovies(props.category, page)
+  // Update URL with page query param — router.back() will restore this
+  router.push({ query: { ...route.query, page: page === 1 ? undefined : page } })
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
 function onRetry() {
-  movieStore.fetchMovies(props.category, currentPage.value)
+  movieStore.fetchMovies(props.category, pageParam.value)
 }
 </script>
 
