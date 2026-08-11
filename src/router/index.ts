@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { MOVIE_CATEGORIES } from '@/constants/categories'
 import MovieDetailView from '@/views/MovieDetailView.vue'
+import FavoritesView from '@/views/FavoritesView.vue'
 import NotFoundView from '@/views/NotFoundView.vue'
 import HomeView from '@/views/HomeView.vue'
 
@@ -23,7 +24,12 @@ const router = createRouter({
     {
       path: '/movie/:id',
       name: 'movieDetail',
-      component: MovieDetailView
+      component: MovieDetailView,
+    },
+    {
+      path: '/favorites',
+      name: 'favorites',
+      component: FavoritesView,
     },
     {
       path: '/:catchAll(.*)',

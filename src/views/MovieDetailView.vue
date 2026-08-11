@@ -32,7 +32,7 @@ const isFav = computed(() => {
 
 function toggleFav() {
   if (currentMovie.value) {
-    movieStore.toggleFavorite(currentMovie.value.id)
+    movieStore.toggleFavorite(currentMovie.value)
   }
 }
 </script>

@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { getMoviesByCategory, getMovieDetails } from "@/service/tmdb";
+import { getFavoriteMoviesFromStorage, saveFavoriteMoviesToStorage } from "@/utils/storage";
 import type { Movie, MovieDetail, MovieCategory } from "@/types";
 
 export const useMovieStore = defineStore("movie", () => {
@@ -13,7 +14,11 @@ export const useMovieStore = defineStore("movie", () => {
   const currentPage = ref(1);
   const totalPages = ref(1);
   const activeCategory = ref<MovieCategory>("popular");
-  const favorites = ref<number[]>([]);
+
+  // Favorite Movies persisted in LocalStorage
+  const favoriteMovies = ref<Movie[]>(getFavoriteMoviesFromStorage());
+
+  const favoriteCount = computed(() => favoriteMovies.value.length);
 
   // Actions
   async function fetchMovies(category: MovieCategory = "popular", page: number = 1) {
@@ -48,17 +53,18 @@ export const useMovieStore = defineStore("movie", () => {
     }
   }
 
-  function toggleFavorite(id: number) {
-    const index = favorites.value.indexOf(id);
+  function toggleFavorite(movie: Movie) {
+    const index = favoriteMovies.value.findIndex((m) => m.id === movie.id);
     if (index > -1) {
-      favorites.value.splice(index, 1);
+      favoriteMovies.value.splice(index, 1);
     } else {
-      favorites.value.push(id);
+      favoriteMovies.value.push(movie);
     }
+    saveFavoriteMoviesToStorage(favoriteMovies.value);
   }
 
   function isFavorite(id: number): boolean {
-    return favorites.value.includes(id);
+    return favoriteMovies.value.some((m) => m.id === id);
   }
 
   return {
@@ -70,7 +76,8 @@ export const useMovieStore = defineStore("movie", () => {
     currentPage,
     totalPages,
     activeCategory,
-    favorites,
+    favoriteMovies,
+    favoriteCount,
     fetchMovies,
     fetchMovieDetails,
     toggleFavorite,

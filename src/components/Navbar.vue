@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon, FilmIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon, FilmIcon, HeartIcon } from '@heroicons/vue/24/outline'
 import { ref, computed } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { MOVIE_CATEGORIES } from '@/constants/categories'
+import { useMovieStore } from '@/stores/movieStore'
+import { storeToRefs } from 'pinia'
 
 const route = useRoute()
+const movieStore = useMovieStore()
+const { favoriteCount } = storeToRefs(movieStore)
 
 // Dynamically generate navigation links from MOVIE_CATEGORIES constants
 const navigation = computed(() =>
@@ -63,8 +67,30 @@ const showSearch = ref(false)
           </div>
         </div>
 
-        <!-- Search -->
+        <!-- Right Side: Favorites Icon + Search -->
         <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          
+          <!-- Favorites Icon Button -->
+          <RouterLink
+            to="/favorites"
+            :class="[
+              'relative rounded-full p-2 transition-colors mr-2 flex items-center justify-center',
+              route.path === '/favorites'
+                ? 'text-red-400 bg-red-950/40 border border-red-800/50'
+                : 'text-gray-400 hover:text-red-400 hover:bg-gray-800'
+            ]"
+            title="Favorites"
+          >
+            <HeartIcon class="size-5" aria-hidden="true" />
+            <span
+              v-if="favoriteCount > 0"
+              class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center border border-gray-900 shadow-md"
+            >
+              {{ favoriteCount }}
+            </span>
+          </RouterLink>
+
+          <!-- Search Bar & Toggle Button -->
           <div class="relative flex items-center">
             <transition
               enter-active-class="transition ease-out duration-200"
@@ -86,6 +112,7 @@ const showSearch = ref(false)
             <button
               @click="showSearch = !showSearch"
               class="rounded-full p-2 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+              title="Search"
             >
               <MagnifyingGlassIcon class="size-5" aria-hidden="true" />
             </button>
