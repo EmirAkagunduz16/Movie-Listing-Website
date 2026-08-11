@@ -9,7 +9,10 @@ defineProps<{
 </script>
 
 <template>
-  <div class="group relative bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-900/20 hover:-translate-y-1 cursor-pointer">
+  <RouterLink
+    :to="{ name: 'movieDetail', params: { id: movie.id } }"
+    class="movie-card group relative bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-900/20 hover:-translate-y-1 block cursor-pointer"
+  >
     <!-- Poster -->
     <div class="relative aspect-[2/3] overflow-hidden bg-gray-800">
       <img
@@ -48,5 +51,5 @@ defineProps<{
         <span>{{ formatDate(movie.release_date) }}</span>
       </div>
     </div>
-  </div>
+  </RouterLink>
 </template>

@@ -9,6 +9,18 @@ export function formatDate(dateStr: string | null | undefined): string {
 }
 
 /**
+ * Formats runtime in minutes into hours and minutes string (e.g. 173 -> "2h 53m").
+ */
+export function formatRuntime(minutes: number | undefined | null): string {
+  if (!minutes || minutes <= 0) return 'N/A'
+  const hrs = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  if (hrs > 0 && mins > 0) return `${hrs}h ${mins}m`
+  if (hrs > 0) return `${hrs}h`
+  return `${mins}m`
+}
+
+/**
  * Returns rating text color class based on vote average.
  */
 export function getRatingColor(rating: number): string {

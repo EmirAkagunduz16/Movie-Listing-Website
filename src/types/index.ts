@@ -11,6 +11,22 @@ export interface Movie {
   genre_ids: number[];
 }
 
+export interface Genre {
+  id: number;
+  name: string;
+}
+
+export interface MovieDetail extends Movie {
+  tagline?: string;
+  runtime?: number;
+  genres: Genre[];
+  status?: string;
+  budget?: number;
+  revenue?: number;
+  homepage?: string;
+  imdb_id?: string;
+}
+
 export interface TMDBResponse<T> {
   page: number;
   results: T[];
