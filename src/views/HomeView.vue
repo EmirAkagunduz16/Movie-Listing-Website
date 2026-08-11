@@ -41,7 +41,6 @@ watch(
 
 function onPageChange(page: number) {
   movieStore.fetchMovies(props.category, page)
-  window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 </script>
 
