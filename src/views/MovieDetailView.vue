@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { watch, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import { StarIcon, CalendarIcon, ClockIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
 import { HeartIcon as HeartIconOutline, ArrowLeftIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
@@ -10,6 +10,7 @@ import { useMovieStore } from '@/stores/movieStore'
 import { formatDate, formatRuntime, getRatingColor, getTMDBImageUrl } from '@/utils/formatters'
 
 const route = useRoute()
+const router = useRouter()
 const movieStore = useMovieStore()
 const { currentMovie, movieLoading, error } = storeToRefs(movieStore)
 
@@ -33,6 +34,16 @@ const isFav = computed(() => {
 function toggleFav() {
   if (currentMovie.value) {
     movieStore.toggleFavorite(currentMovie.value)
+  }
+}
+
+// Go back to exactly where the user came from (preserves category, page, search query etc.)
+// Falls back to '/' if there's no previous history entry (e.g. direct URL access)
+function goBack() {
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.push('/')
   }
 }
 </script>
@@ -87,13 +98,13 @@ function toggleFav() {
           <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full">
             
             <!-- Back Button -->
-            <RouterLink
-              to="/"
-              class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-8 transition-colors bg-gray-900/60 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-gray-800"
+            <button
+              @click="goBack"
+              class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-8 transition-colors bg-gray-900/60 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-gray-800 cursor-pointer"
             >
               <ArrowLeftIcon class="size-4" />
               <span>Back to Movies</span>
-            </RouterLink>
+            </button>
 
             <div class="flex flex-col md:flex-row gap-8 lg:gap-12 items-center md:items-start">
               
