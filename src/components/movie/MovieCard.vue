@@ -14,7 +14,7 @@ defineProps<{
     class="movie-card group relative bg-gray-900 rounded-xl overflow-hidden border border-gray-800 hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-900/20 hover:-translate-y-1 block cursor-pointer"
   >
     <!-- Poster -->
-    <div class="relative aspect-[2/3] overflow-hidden bg-gray-800">
+    <div class="relative aspect-2/3 overflow-hidden bg-gray-800">
       <img
         v-if="movie.poster_path"
         :src="getTMDBImageUrl(movie.poster_path)!"
@@ -36,7 +36,7 @@ defineProps<{
       </div>
 
       <!-- Hover Overlay -->
-      <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+      <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
         <p class="text-gray-300 text-xs line-clamp-3 leading-relaxed">{{ movie.overview }}</p>
       </div>
     </div>

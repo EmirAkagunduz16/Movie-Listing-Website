@@ -49,13 +49,3 @@ export async function searchMovies(
 
   return response.data;
 }
-
-// Convenience helper aliases
-export const getPopularMovies = (page = 1) =>
-  getMoviesByCategory("popular", page);
-export const getTopRatedMovies = (page = 1) =>
-  getMoviesByCategory("top_rated", page);
-export const getUpcomingMovies = (page = 1) =>
-  getMoviesByCategory("upcoming", page);
-export const getNowPlayingMovies = (page = 1) =>
-  getMoviesByCategory("now_playing", page);

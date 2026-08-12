@@ -100,8 +100,8 @@ export const useMovieStore = defineStore("movie", () => {
   }
 
   return {
-    movies,
-    currentMovie,
+    movies: movies,
+    currentMovie: currentMovie,
     loading,
     movieLoading,
     error,

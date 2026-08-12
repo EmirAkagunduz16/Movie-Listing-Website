@@ -57,7 +57,7 @@ function goBack() {
       <div v-if="movieLoading"
            class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-pulse">
         <div class="flex flex-col md:flex-row gap-8 items-start">
-          <div class="w-64 sm:w-80 aspect-[2/3] bg-gray-800 rounded-2xl"></div>
+          <div class="w-64 sm:w-80 aspect-2/3 bg-gray-800 rounded-2xl"></div>
           <div class="flex-1 space-y-4 w-full">
             <div class="h-4 bg-gray-800 rounded w-1/4"></div>
             <div class="h-10 bg-gray-800 rounded w-3/4"></div>
@@ -91,7 +91,7 @@ function goBack() {
           <div v-if="currentMovie.backdrop_path"
                class="absolute inset-0 bg-cover bg-center opacity-25 scale-105 filter blur-sm transform transition-all duration-700"
                :style="{ backgroundImage: `url(${getTMDBImageUrl(currentMovie.backdrop_path, 'original')})` }"></div>
-          <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/80 to-gray-950/40"></div>
+          <div class="absolute inset-0 bg-linear-to-t from-gray-950 via-gray-950/80 to-gray-950/40"></div>
 
           <!-- Main Content Container -->
           <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full">
@@ -113,7 +113,7 @@ function goBack() {
                      :alt="currentMovie.title"
                      class="w-full h-auto object-cover rounded-2xl shadow-indigo-950/30" />
                 <div v-else
-                     class="w-full aspect-[2/3] flex items-center justify-center bg-gray-800">
+                     class="w-full aspect-2/3 flex items-center justify-center bg-gray-800">
                   <svg class="w-20 h-20 text-gray-600"
                        fill="none"
                        stroke="currentColor"
