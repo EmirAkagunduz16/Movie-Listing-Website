@@ -1,9 +1,15 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+html {
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 body {
@@ -14,7 +20,18 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+html.light body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+html.dark body {
+  background-color: #030712;
+  color: #f9fafb;
+}
+
 /* Smooth page transitions */
 .page-container {
   animation: fadeIn 0.3s ease;
 }
+

@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon, FilmIcon, HeartIcon } from '@heroicons/vue/24/outline'
+import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon, FilmIcon, HeartIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline'
 import { ref, computed, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { MOVIE_CATEGORIES } from '@/constants/categories'
 import { useMovieStore } from '@/stores/movieStore'
+import { useTheme } from '@/composables/useTheme'
 import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 const router = useRouter()
 const movieStore = useMovieStore()
 const { favoriteCount } = storeToRefs(movieStore)
+const { theme, toggleTheme } = useTheme()
 
 // Dynamically generate navigation links from MOVIE_CATEGORIES constants
 const navigation = computed(() =>
@@ -54,7 +56,7 @@ function toggleSearchInput() {
 
 <template>
   <Disclosure as="nav"
-              class="sticky top-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800"
+              class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-gray-800 transition-colors duration-200"
               v-slot="{ open }">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
@@ -62,7 +64,7 @@ function toggleSearchInput() {
         <!-- Mobile menu button -->
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <DisclosureButton
-                            class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors">
+                            class="inline-flex items-center justify-center rounded-md p-2 text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors">
             <span class="sr-only">Open main menu</span>
             <Bars3Icon v-if="!open"
                        class="block size-6"
@@ -82,7 +84,7 @@ function toggleSearchInput() {
               <FilmIcon class="size-5 text-white"
                         aria-hidden="true" />
             </div>
-            <span class="text-white font-bold text-lg tracking-tight">CineVault</span>
+            <span class="text-slate-900 dark:text-white font-bold text-lg tracking-tight">CineVault</span>
           </RouterLink>
 
           <!-- Nav Links -->
@@ -93,7 +95,7 @@ function toggleSearchInput() {
                         :class="[
                           item.current
                             ? 'bg-indigo-600 text-white'
-                            : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+                            : 'text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800 hover:text-slate-900 dark:hover:text-white',
                           'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-150'
                         ]"
                         :aria-current="item.current ? 'page' : undefined">
@@ -103,21 +105,31 @@ function toggleSearchInput() {
         </div>
 
         <!-- Right Side: Favorites Icon + Search -->
-        <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+        <div class="absolute inset-y-0 right-0 flex items-center justify-between pr-2 sm:static sm:inset-auto  sm:pr-0">
+          <!-- Dark Light Theme Button -->
+          <button
+            type="button"
+            @click="toggleTheme"
+            class="relative rounded-full p-2 text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors mr-2 flex items-center justify-center cursor-pointer"
+            :title="theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
+          >
+            <SunIcon v-if="theme === 'dark'" class="size-5 text-amber-400" aria-hidden="true" />
+            <MoonIcon v-else class="size-5 text-indigo-500" aria-hidden="true" />
+          </button>
 
           <!-- Favorites Icon Button -->
           <RouterLink to="/favorites"
                       :class="[
                         'relative rounded-full p-2 transition-colors mr-2 flex items-center justify-center',
                         route.path === '/favorites'
-                          ? 'text-red-400 bg-red-950/40 border border-red-800/50'
-                          : 'text-gray-400 hover:text-red-400 hover:bg-gray-800'
+                          ? 'text-red-500 bg-red-100 dark:bg-red-950/40 border border-red-300 dark:border-red-800/50'
+                          : 'text-slate-500 dark:text-gray-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-gray-800'
                       ]"
                       title="Favorites">
             <HeartIcon class="size-5"
                        aria-hidden="true" />
             <span v-if="favoriteCount > 0"
-                  class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center border border-gray-900 shadow-md">
+                  class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center border border-white dark:border-gray-900 shadow-md">
               {{ favoriteCount }}
             </span>
           </RouterLink>
@@ -135,13 +147,13 @@ function toggleSearchInput() {
                      v-model="searchQuery"
                      type="text"
                      placeholder="Search movies by title..."
-                     class="mr-2 overflow-hidden bg-gray-800 text-white text-sm rounded-lg px-3 py-1.5 border border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-gray-500 w-48 sm:w-64"
+                     class="mr-2 overflow-hidden bg-slate-100 dark:bg-gray-800 text-slate-900 dark:text-white text-sm rounded-lg px-3 py-1.5 border border-slate-300 dark:border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-slate-400 dark:placeholder-gray-500 w-48 sm:w-64"
                      autofocus
                      @keydown.enter="onSearchSubmit" />
             </transition>
             <button type="button"
                     @click="toggleSearchInput"
-                    class="rounded-full p-2 text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
+                    class="rounded-full p-2 text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
                     title="Search">
               <MagnifyingGlassIcon class="size-5"
                                    aria-hidden="true" />
@@ -153,7 +165,7 @@ function toggleSearchInput() {
     </div>
 
     <!-- Mobile Menu -->
-    <DisclosurePanel class="sm:hidden border-t border-gray-800">
+    <DisclosurePanel class="sm:hidden border-t border-slate-200 dark:border-gray-800">
       <div class="space-y-1 px-3 pt-2 pb-3">
         <DisclosureButton v-for="item in navigation"
                           :key="item.name"
@@ -162,7 +174,7 @@ function toggleSearchInput() {
                       :class="[
                         item.current
                           ? 'bg-indigo-600 text-white'
-                          : 'text-gray-300 hover:bg-gray-800 hover:text-white',
+                          : 'text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800 hover:text-slate-900 dark:hover:text-white',
                         'block rounded-md px-3 py-2 text-base font-medium transition-colors'
                       ]"
                       :aria-current="item.current ? 'page' : undefined">
@@ -176,7 +188,7 @@ function toggleSearchInput() {
           <input v-model="searchQuery"
                  type="text"
                  placeholder="Search movies..."
-                 class="w-full bg-gray-800 text-white text-sm rounded-lg px-3 py-2 border border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-gray-500"
+                 class="w-full bg-slate-100 dark:bg-gray-800 text-slate-900 dark:text-white text-sm rounded-lg px-3 py-2 border border-slate-300 dark:border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-slate-400 dark:placeholder-gray-500"
                  @keydown.enter="onSearchSubmit" />
         </form>
       </div>

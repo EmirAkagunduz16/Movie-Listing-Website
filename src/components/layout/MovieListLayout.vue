@@ -38,7 +38,7 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-950 text-white flex flex-col justify-between">
+  <div class="min-h-screen bg-slate-50 text-slate-900 dark:bg-gray-950 dark:text-white flex flex-col justify-between transition-colors duration-200">
     <div>
       <Navbar />
       <HeroSection :title="heroTitle" :subtitle="heroSubtitle" />
@@ -51,9 +51,9 @@ defineEmits<{
               class="w-1 h-7 rounded-full"
               :style="{ backgroundColor: accentColor || '#6366f1' }"
             ></div>
-            <h2 class="text-xl font-bold text-white">{{ sectionTitle }}</h2>
+            <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ sectionTitle }}</h2>
           </div>
-          <span v-if="sectionInfo && !loading" class="text-sm text-gray-500">
+          <span v-if="sectionInfo && !loading" class="text-sm text-slate-500 dark:text-gray-500">
             {{ sectionInfo }}
           </span>
         </div>
