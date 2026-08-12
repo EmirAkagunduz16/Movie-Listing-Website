@@ -18,6 +18,8 @@ const { favoriteMovies } = storeToRefs(movieStore)
     :movies="favoriteMovies"
     :loading="false"
     :error="null"
+    :is-favorite-fn="movieStore.isFavorite"
+    @toggle-favorite="movieStore.toggleFavorite"
   >
     <!-- Custom Empty State for Favorites -->
     <template #empty>

@@ -62,7 +62,9 @@ function onRetry() {
     :error="error"
     :current-page="currentPage"
     :total-pages="totalPages"
+    :is-favorite-fn="movieStore.isFavorite"
     @retry="onRetry"
     @page-change="onPageChange"
+    @toggle-favorite="movieStore.toggleFavorite"
   />
 </template>

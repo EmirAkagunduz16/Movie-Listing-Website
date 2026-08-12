@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { getMoviesByCategory, getMovieDetails, searchMovies } from "@/service/tmdb";
+import { getMoviesByCategory, getMovieDetails, searchMovies, getSimilarMovies } from "@/service/tmdb";
 import { getFavoriteMoviesFromStorage, saveFavoriteMoviesToStorage } from "@/utils/storage";
 import type { Movie, MovieDetail, MovieCategory } from "@/types";
 
@@ -14,6 +14,10 @@ export const useMovieStore = defineStore("movie", () => {
   const currentPage = ref(1);
   const totalPages = ref(1);
   const activeCategory = ref<MovieCategory>("popular");
+
+  // Similar Movies State
+  const similarMovies = ref<Movie[]>([]);
+  const similarLoading = ref(false);
 
   // Search State
   const searchResults = ref<Movie[]>([]);
@@ -50,14 +54,30 @@ export const useMovieStore = defineStore("movie", () => {
     movieLoading.value = true;
     error.value = null;
     currentMovie.value = null;
+    similarMovies.value = [];
 
     try {
       const data = await getMovieDetails(movieId);
       currentMovie.value = data;
+      // Fetch similar movies in parallel
+      fetchSimilarMovies(movieId);
     } catch (err: any) {
       error.value = err?.message || "Movie details could not be loaded.";
     } finally {
       movieLoading.value = false;
+    }
+  }
+
+  async function fetchSimilarMovies(movieId: number | string) {
+    similarLoading.value = true;
+    try {
+      const data = await getSimilarMovies(movieId);
+      similarMovies.value = data.results;
+    } catch (err: any) {
+      console.error("Failed to fetch similar movies:", err);
+      similarMovies.value = [];
+    } finally {
+      similarLoading.value = false;
     }
   }
 
@@ -108,6 +128,8 @@ export const useMovieStore = defineStore("movie", () => {
     currentPage,
     totalPages,
     activeCategory,
+    similarMovies,
+    similarLoading,
     searchResults,
     searchQuery,
     searchLoading,
@@ -118,6 +140,7 @@ export const useMovieStore = defineStore("movie", () => {
     favoriteCount,
     fetchMovies,
     fetchMovieDetails,
+    fetchSimilarMovies,
     performSearch,
     toggleFavorite,
     isFavorite,

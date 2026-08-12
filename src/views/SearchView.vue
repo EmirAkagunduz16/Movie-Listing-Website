@@ -63,8 +63,10 @@ function onRetry() {
     :error="error"
     :current-page="searchCurrentPage"
     :total-pages="searchTotalPages"
+    :is-favorite-fn="movieStore.isFavorite"
     @retry="onRetry"
     @page-change="onPageChange"
+    @toggle-favorite="movieStore.toggleFavorite"
   >
     <!-- Custom Empty State for Search -->
     <template #empty>

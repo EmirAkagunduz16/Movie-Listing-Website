@@ -44,3 +44,17 @@ export async function searchMovies(
 
   return response.data;
 }
+
+export async function getSimilarMovies(
+  movieId: number | string,
+  page: number = 1
+): Promise<TMDBResponse<Movie>> {
+  const response = await axiosClient.get<TMDBResponse<Movie>>(`/movie/${movieId}/similar`, {
+    params: {
+      page,
+      language: "en-US",
+    },
+  });
+
+  return response.data;
+}

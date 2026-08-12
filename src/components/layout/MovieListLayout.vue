@@ -29,11 +29,14 @@ defineProps<{
   currentPage?: number
   /** Total pages (for pagination) */
   totalPages?: number
+  /** Function to check if a movie is favorite */
+  isFavoriteFn?: (id: number) => boolean
 }>()
 
 defineEmits<{
   (e: 'retry'): void
   (e: 'page-change', page: number): void
+  (e: 'toggle-favorite', movie: Movie): void
 }>()
 </script>
 
@@ -80,6 +83,8 @@ defineEmits<{
               v-for="movie in movies"
               :key="movie.id"
               :movie="movie"
+              :is-favorite="isFavoriteFn ? isFavoriteFn(movie.id) : false"
+              @toggle-favorite="$emit('toggle-favorite', $event)"
             />
           </div>
 

@@ -1,11 +1,28 @@
 <script setup lang="ts">
-import { StarIcon, CalendarIcon } from '@heroicons/vue/24/solid'
+import { StarIcon, CalendarIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
+import { HeartIcon as HeartIconOutline } from '@heroicons/vue/24/outline'
 import type { Movie } from '@/types'
 import { formatDate, getRatingColor, getTMDBImageUrl } from '@/utils/formatters'
 
-defineProps<{
-  movie: Movie
+const props = withDefaults(
+  defineProps<{
+    movie: Movie
+    isFavorite?: boolean
+  }>(),
+  {
+    isFavorite: false,
+  }
+)
+
+const emit = defineEmits<{
+  (e: 'toggle-favorite', movie: Movie): void
 }>()
+
+function toggleFav(event: Event) {
+  event.preventDefault()
+  event.stopPropagation()
+  emit('toggle-favorite', props.movie)
+}
 </script>
 
 <template>
@@ -27,6 +44,22 @@ defineProps<{
         </svg>
       </div>
 
+      <!-- Favorite Button -->
+      <button
+        @click="toggleFav"
+        type="button"
+        :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+        :class="[
+          'absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer shadow-md',
+          isFavorite
+            ? 'bg-red-600 hover:bg-red-700 text-white shadow-red-900/50'
+            : 'bg-gray-900/80 hover:bg-gray-900 text-gray-300 hover:text-white border border-gray-700/60 backdrop-blur-sm'
+        ]"
+      >
+        <HeartIconSolid v-if="isFavorite" class="size-4 text-white" />
+        <HeartIconOutline v-else class="size-4" />
+      </button>
+
       <!-- Rating Badge -->
       <div class="absolute top-2 right-2 flex items-center gap-1 bg-gray-900/90 backdrop-blur-sm rounded-full px-2 py-1 border border-gray-700">
         <StarIcon class="size-3.5 text-yellow-400" />
@@ -36,7 +69,7 @@ defineProps<{
       </div>
 
       <!-- Hover Overlay -->
-      <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3">
+      <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 pointer-events-none">
         <p class="text-gray-300 text-xs line-clamp-3 leading-relaxed">{{ movie.overview }}</p>
       </div>
     </div>

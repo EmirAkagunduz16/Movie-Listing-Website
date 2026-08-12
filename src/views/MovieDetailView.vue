@@ -6,13 +6,14 @@ import { StarIcon, CalendarIcon, ClockIcon, HeartIcon as HeartIconSolid } from '
 import { HeartIcon as HeartIconOutline, ArrowLeftIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/layout/Navbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
+import MovieCard from '@/components/movie/MovieCard.vue'
 import { useMovieStore } from '@/stores/movieStore'
 import { formatDate, formatRuntime, getRatingColor, getTMDBImageUrl } from '@/utils/formatters'
 
 const route = useRoute()
 const router = useRouter()
 const movieStore = useMovieStore()
-const { currentMovie, movieLoading, error } = storeToRefs(movieStore)
+const { currentMovie, movieLoading, error, similarMovies } = storeToRefs(movieStore)
 
 const movieId = computed(() => route.params.id as string)
 
@@ -206,6 +207,23 @@ function goBack() {
 
             </div>
 
+          </div>
+        </div>
+
+        <!-- Similar Movies Section -->
+        <div v-if="similarMovies && similarMovies.length > 0"
+             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-900">
+          <div class="flex items-center gap-3 mb-8">
+            <div class="w-1 h-7 rounded-full bg-indigo-500"></div>
+            <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Similar Movies</h2>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+            <MovieCard v-for="movie in similarMovies"
+                       :key="movie.id"
+                       :movie="movie"
+                       :is-favorite="movieStore.isFavorite(movie.id)"
+                       @toggle-favorite="movieStore.toggleFavorite" />
           </div>
         </div>
       </div>
