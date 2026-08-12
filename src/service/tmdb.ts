@@ -30,11 +30,6 @@ export async function getMovieDetails(
   return response.data;
 }
 
-/**
- * Searches movies by title keyword query from TMDB API.
- * @param query - Search keyword
- * @param page - Page number (defaults to 1)
- */
 export async function searchMovies(
   query: string,
   page: number = 1,

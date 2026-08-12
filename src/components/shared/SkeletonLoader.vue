@@ -16,7 +16,7 @@ withDefaults(
       :key="i"
       class="bg-gray-900 rounded-xl overflow-hidden animate-pulse border border-gray-800"
     >
-      <div class="aspect-[2/3] bg-gray-800"></div>
+      <div class="aspect-2/3 bg-gray-800"></div>
       <div class="p-3 space-y-2">
         <div class="h-4 bg-gray-800 rounded w-3/4"></div>
         <div class="h-3 bg-gray-800 rounded w-1/2"></div>

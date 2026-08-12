@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <section class="relative overflow-hidden bg-gradient-to-b from-gray-900 to-gray-950 border-b border-gray-800">
+  <section class="relative overflow-hidden bg-linear-to-b from-gray-900 to-gray-950 border-b border-gray-800">
     <div class="absolute inset-0 bg-[url('https://image.tmdb.org/t/p/original/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg')] bg-cover bg-center opacity-10"></div>
     <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
       <div class="max-w-2xl">
