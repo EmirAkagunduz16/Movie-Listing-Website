@@ -110,7 +110,7 @@ defineEmits<{
           <!-- Overview Section -->
           <div class="mb-4">
             <h2 class="fs-5 fw-bold text-white mb-2">Overview</h2>
-            <p class="lh-lg mb-0" style="color: #cbd5e1; max-width: 720px;">
+            <p class="lh-md mb-0" style="color: #cbd5e1; max-width: 720px;">
               {{ movie.overview || 'No overview available for this movie.' }}
             </p>
           </div>

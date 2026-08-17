@@ -108,14 +108,13 @@ body {
   inset: 0;
   background-size: cover;
   background-position: center;
+  filter: blur(2px);
   opacity: 0.65;
-  filter: blur(1px);
-  transform: scale(1.05);
 }
 .detail-gradient {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(9, 13, 22, 0.35) 0%, rgba(9, 13, 22, 0.85) 85%, #090d16 100%);
+  background: linear-gradient(180deg, rgba(9, 13, 22, 0.35) 0%, rgba(9, 13, 22, 0.85) 90%, #090d16 100%);
 }
 
 /* ── Line Clamp Utility ──────────────────────────────────────── */
