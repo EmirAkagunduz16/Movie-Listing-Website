@@ -128,8 +128,8 @@ function toggleSearchInput() {
             </span>
           </RouterLink>
 
-          <!-- Search Form -->
-          <form @submit.prevent="onSearchSubmit" class="d-flex align-items-center gap-2">
+          <!-- Desktop Search Form -->
+          <form @submit.prevent="onSearchSubmit" class="d-none d-md-flex align-items-center gap-2">
             <div v-if="showSearch" class="input-group input-group-sm" style="min-width: 180px;">
               <input
                 v-model="searchQuery"
@@ -154,13 +154,18 @@ function toggleSearchInput() {
 
         <!-- Mobile Search (inside collapse) -->
         <form @submit.prevent="onSearchSubmit" class="d-md-none mt-3">
-          <input
-            v-model="searchQuery"
-            type="text"
-            class="form-control"
-            placeholder="Search movies..."
-            @keydown.enter="onSearchSubmit"
-          />
+          <div class="input-group input-group-sm">
+            <span class="input-group-text bg-transparent border-end-0">
+              <i class="bi bi-search text-body-secondary"></i>
+            </span>
+            <input
+              v-model="searchQuery"
+              type="text"
+              class="form-control border-start-0 ps-0"
+              placeholder="Search movies..."
+              @keydown.enter="onSearchSubmit"
+            />
+          </div>
         </form>
       </div>
     </div>
