@@ -53,7 +53,7 @@ function toggleSearchInput() {
 </script>
 
 <template>
-  <nav class="navbar navbar-expand-sm sticky-top border-bottom">
+  <nav class="navbar navbar-expand-md sticky-top border-bottom">
     <div class="container">
       <!-- Brand / Logo -->
       <RouterLink to="/" class="navbar-brand d-flex align-items-center gap-2 fw-bold">
@@ -79,7 +79,7 @@ function toggleSearchInput() {
       <!-- Collapsible Content -->
       <div class="collapse navbar-collapse" id="navbarMain">
         <!-- Nav Links -->
-        <ul class="navbar-nav me-auto mb-2 mb-sm-0 ms-sm-3">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0 ms-md-3">
           <li v-for="item in navigation" :key="item.name" class="nav-item">
             <RouterLink
               :to="item.href"
@@ -95,7 +95,7 @@ function toggleSearchInput() {
         </ul>
 
         <!-- Right Side: Theme + Favorites + Search -->
-        <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
+        <div class="d-flex align-items-center gap-2 mt-2 mt-md-0">
           <!-- Theme Toggle -->
           <button
             type="button"
@@ -153,7 +153,7 @@ function toggleSearchInput() {
         </div>
 
         <!-- Mobile Search (inside collapse) -->
-        <form @submit.prevent="onSearchSubmit" class="d-sm-none mt-3">
+        <form @submit.prevent="onSearchSubmit" class="d-md-none mt-3">
           <input
             v-model="searchQuery"
             type="text"
