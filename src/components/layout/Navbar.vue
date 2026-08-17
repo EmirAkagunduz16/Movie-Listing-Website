@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { Bars3Icon, XMarkIcon, MagnifyingGlassIcon, FilmIcon, HeartIcon, SunIcon, MoonIcon } from '@heroicons/vue/24/outline'
 import { ref, computed, watch } from 'vue'
 import { RouterLink, useRoute, useRouter } from 'vue-router'
 import { MOVIE_CATEGORIES } from '@/constants/categories'
@@ -55,143 +53,116 @@ function toggleSearchInput() {
 </script>
 
 <template>
-  <Disclosure as="nav"
-              class="sticky top-0 z-50 bg-white/90 dark:bg-gray-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-gray-800 transition-colors duration-200"
-              v-slot="{ open }">
-    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <div class="relative flex h-16 items-center justify-between">
-
-        <!-- Mobile menu button -->
-        <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-          <DisclosureButton
-                            class="inline-flex items-center justify-center rounded-md p-2 text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors">
-            <span class="sr-only">Open main menu</span>
-            <Bars3Icon v-if="!open"
-                       class="block size-6"
-                       aria-hidden="true" />
-            <XMarkIcon v-else
-                       class="block size-6"
-                       aria-hidden="true" />
-          </DisclosureButton>
+  <nav class="navbar navbar-expand-sm sticky-top border-bottom">
+    <div class="container">
+      <!-- Brand / Logo -->
+      <RouterLink to="/" class="navbar-brand d-flex align-items-center gap-2 fw-bold">
+        <div class="d-flex align-items-center justify-content-center rounded bg-indigo" style="width: 32px; height: 32px;">
+          <i class="bi bi-film text-white"></i>
         </div>
+        <span>CineVault</span>
+      </RouterLink>
 
-        <!-- Logo + Nav Links -->
-        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <!-- Logo -->
-          <RouterLink to="/"
-                      class="flex shrink-0 items-center gap-2">
-            <div class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-600">
-              <FilmIcon class="size-5 text-white"
-                        aria-hidden="true" />
-            </div>
-            <span class="text-slate-900 dark:text-white font-bold text-lg tracking-tight">CineVault</span>
-          </RouterLink>
+      <!-- Mobile Toggler -->
+      <button
+        class="navbar-toggler border-0"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarMain"
+        aria-controls="navbarMain"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-          <!-- Nav Links -->
-          <div class="hidden sm:ml-8 sm:flex sm:items-center sm:space-x-1">
-            <RouterLink v-for="item in navigation"
-                        :key="item.name"
-                        :to="item.href"
-                        :class="[
-                          item.current
-                            ? 'bg-indigo-600 text-white'
-                            : 'text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800 hover:text-slate-900 dark:hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium transition-colors duration-150'
-                        ]"
-                        :aria-current="item.current ? 'page' : undefined">
+      <!-- Collapsible Content -->
+      <div class="collapse navbar-collapse" id="navbarMain">
+        <!-- Nav Links -->
+        <ul class="navbar-nav me-auto mb-2 mb-sm-0 ms-sm-3">
+          <li v-for="item in navigation" :key="item.name" class="nav-item">
+            <RouterLink
+              :to="item.href"
+              class="nav-link rounded px-3 py-2"
+              :class="{
+                'active fw-semibold text-white bg-indigo': item.current,
+              }"
+              :aria-current="item.current ? 'page' : undefined"
+            >
               {{ item.name }}
             </RouterLink>
-          </div>
-        </div>
+          </li>
+        </ul>
 
-        <!-- Right Side: Favorites Icon + Search -->
-        <div class="absolute inset-y-0 right-0 flex items-center justify-between pr-2 sm:static sm:inset-auto  sm:pr-0">
-          <!-- Dark Light Theme Button -->
+        <!-- Right Side: Theme + Favorites + Search -->
+        <div class="d-flex align-items-center gap-2 mt-2 mt-sm-0">
+          <!-- Theme Toggle -->
           <button
             type="button"
+            class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center"
+            style="width: 36px; height: 36px;"
             @click="toggleTheme"
-            class="relative rounded-full p-2 text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors mr-2 flex items-center justify-center cursor-pointer"
             :title="theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'"
           >
-            <SunIcon v-if="theme === 'dark'" class="size-5 text-amber-400" aria-hidden="true" />
-            <MoonIcon v-else class="size-5 text-indigo-500" aria-hidden="true" />
+            <i v-if="theme === 'dark'" class="bi bi-sun-fill text-warning"></i>
+            <i v-else class="bi bi-moon-fill text-indigo"></i>
           </button>
 
-          <!-- Favorites Icon Button -->
-          <RouterLink to="/favorites"
-                      :class="[
-                        'relative rounded-full p-2 transition-colors mr-2 flex items-center justify-center',
-                        route.path === '/favorites'
-                          ? 'text-red-500 bg-red-100 dark:bg-red-950/40 border border-red-300 dark:border-red-800/50'
-                          : 'text-slate-500 dark:text-gray-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-gray-800'
-                      ]"
-                      title="Favorites">
-            <HeartIcon class="size-5"
-                       aria-hidden="true" />
-            <span v-if="favoriteCount > 0"
-                  class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] font-bold rounded-full w-4.5 h-4.5 flex items-center justify-center border border-white dark:border-gray-900 shadow-md">
+          <!-- Favorites -->
+          <RouterLink
+            to="/favorites"
+            class="btn btn-sm rounded-circle d-flex align-items-center justify-content-center position-relative"
+            :class="route.path === '/favorites'
+              ? 'btn-outline-danger'
+              : 'btn-outline-secondary'"
+            style="width: 36px; height: 36px;"
+            title="Favorites"
+          >
+            <i class="bi bi-heart-fill"></i>
+            <span
+              v-if="favoriteCount > 0"
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              style="font-size: 0.6rem;"
+            >
               {{ favoriteCount }}
             </span>
           </RouterLink>
 
-          <!-- Search Bar & Toggle Button -->
-          <form @submit.prevent="onSearchSubmit"
-                class="relative flex items-center">
-            <transition enter-active-class="transition ease-out duration-200"
-                        enter-from-class="opacity-0 w-0"
-                        enter-to-class="opacity-100 w-48 sm:w-64"
-                        leave-active-class="transition ease-in duration-150"
-                        leave-from-class="opacity-100 w-48 sm:w-64"
-                        leave-to-class="opacity-0 w-0">
-              <input v-if="showSearch"
-                     v-model="searchQuery"
-                     type="text"
-                     placeholder="Search movies by title..."
-                     class="mr-2 overflow-hidden bg-slate-100 dark:bg-gray-800 text-slate-900 dark:text-white text-sm rounded-lg px-3 py-1.5 border border-slate-300 dark:border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-slate-400 dark:placeholder-gray-500 w-48 sm:w-64"
-                     autofocus
-                     @keydown.enter="onSearchSubmit" />
-            </transition>
-            <button type="button"
-                    @click="toggleSearchInput"
-                    class="rounded-full p-2 text-slate-500 dark:text-gray-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-gray-800 transition-colors"
-                    title="Search">
-              <MagnifyingGlassIcon class="size-5"
-                                   aria-hidden="true" />
+          <!-- Search Form -->
+          <form @submit.prevent="onSearchSubmit" class="d-flex align-items-center gap-2">
+            <div v-if="showSearch" class="input-group input-group-sm" style="min-width: 180px;">
+              <input
+                v-model="searchQuery"
+                type="text"
+                class="form-control"
+                placeholder="Search movies..."
+                autofocus
+                @keydown.enter="onSearchSubmit"
+              />
+            </div>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center"
+              style="width: 36px; height: 36px;"
+              @click="toggleSearchInput"
+              title="Search"
+            >
+              <i class="bi bi-search"></i>
             </button>
           </form>
         </div>
 
-      </div>
-    </div>
-
-    <!-- Mobile Menu -->
-    <DisclosurePanel class="sm:hidden border-t border-slate-200 dark:border-gray-800">
-      <div class="space-y-1 px-3 pt-2 pb-3">
-        <DisclosureButton v-for="item in navigation"
-                          :key="item.name"
-                          as="template">
-          <RouterLink :to="item.href"
-                      :class="[
-                        item.current
-                          ? 'bg-indigo-600 text-white'
-                          : 'text-slate-600 dark:text-gray-300 hover:bg-slate-100 dark:hover:bg-gray-800 hover:text-slate-900 dark:hover:text-white',
-                        'block rounded-md px-3 py-2 text-base font-medium transition-colors'
-                      ]"
-                      :aria-current="item.current ? 'page' : undefined">
-            {{ item.name }}
-          </RouterLink>
-        </DisclosureButton>
-
-        <!-- Mobile Search Form -->
-        <form @submit.prevent="onSearchSubmit"
-              class="mt-2 px-1">
-          <input v-model="searchQuery"
-                 type="text"
-                 placeholder="Search movies..."
-                 class="w-full bg-slate-100 dark:bg-gray-800 text-slate-900 dark:text-white text-sm rounded-lg px-3 py-2 border border-slate-300 dark:border-gray-700 focus:outline-none focus:border-indigo-500 placeholder-slate-400 dark:placeholder-gray-500"
-                 @keydown.enter="onSearchSubmit" />
+        <!-- Mobile Search (inside collapse) -->
+        <form @submit.prevent="onSearchSubmit" class="d-sm-none mt-3">
+          <input
+            v-model="searchQuery"
+            type="text"
+            class="form-control"
+            placeholder="Search movies..."
+            @keydown.enter="onSearchSubmit"
+          />
         </form>
       </div>
-    </DisclosurePanel>
-  </Disclosure>
+    </div>
+  </nav>
 </template>
