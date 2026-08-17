@@ -10,14 +10,16 @@ function applyTheme(newTheme: Theme) {
   theme.value = newTheme
   localStorage.setItem(THEME_KEY, newTheme)
 
-  const root = document.documentElement
-  if (newTheme === 'dark') {
-    root.classList.add('dark')
-    root.classList.remove('light')
-  } else {
-    root.classList.remove('dark')
-    root.classList.add('light')
-  }
+  document.documentElement.setAttribute('data-bs-theme', newTheme)
+
+  // const root = document.documentElement
+  // if (newTheme === 'dark') {
+  //   root.classList.add('dark')
+  //   root.classList.remove('light')
+  // } else {
+  //   root.classList.remove('dark')
+  //   root.classList.add('light')
+  // }
 }
 
 export function useTheme() {
