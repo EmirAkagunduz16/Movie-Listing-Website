@@ -137,13 +137,25 @@ body {
   background-color: rgba(255, 255, 255, 0.92) !important;
 }
 
-/* ── Pagination Active Override ───────────────────────────────── */
+/* ── Pagination Sizing & Styling ─────────────────────────────── */
 .page-item.active .page-link {
   background-color: #6366f1;
   border-color: #6366f1;
 }
 .page-link {
   cursor: pointer;
+}
+@media (max-width: 991.98px) {
+  .pagination .page-link {
+    padding: 0.35rem 0.65rem;
+    font-size: 0.875rem;
+  }
+}
+@media (min-width: 992px) {
+  .pagination .page-link {
+    padding: 0.6rem 1.15rem;
+    font-size: 1.05rem;
+  }
 }
 
 /* ── Rating Color Utilities ──────────────────────────────────── */

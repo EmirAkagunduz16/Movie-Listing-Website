@@ -41,7 +41,7 @@ function onPageClick(page: number) {
 <template>
   <div class="d-flex flex-column align-items-center gap-2 mt-5">
     <nav aria-label="Movie pagination">
-      <ul class="pagination pagination-sm mb-0 align-items-stretch">
+      <ul class="pagination mb-0 align-items-stretch">
         <!-- Prev Button -->
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <button
