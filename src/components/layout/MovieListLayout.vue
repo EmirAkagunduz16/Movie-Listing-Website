@@ -41,22 +41,23 @@ defineEmits<{
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-900 dark:bg-gray-950 dark:text-white flex flex-col justify-between transition-colors duration-200">
-    <div>
+  <div class="d-flex flex-column min-vh-100">
+    <div class="flex-grow-1">
       <Navbar />
       <HeroSection :title="heroTitle" :subtitle="heroSubtitle" />
 
-      <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+      <main class="container py-4 py-md-5">
         <!-- Section Header -->
-        <div class="flex items-center justify-between mb-8">
-          <div class="flex items-center gap-3">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center gap-2">
             <div
-              class="w-1 h-7 rounded-full"
+              class="rounded-pill"
+              style="width: 4px; height: 28px;"
               :style="{ backgroundColor: accentColor || '#6366f1' }"
             ></div>
-            <h2 class="text-xl font-bold text-slate-900 dark:text-white">{{ sectionTitle }}</h2>
+            <h2 class="fs-5 fw-bold mb-0">{{ sectionTitle }}</h2>
           </div>
-          <span v-if="sectionInfo && !loading" class="text-sm text-slate-500 dark:text-gray-500">
+          <span v-if="sectionInfo && !loading" class="text-body-secondary small">
             {{ sectionInfo }}
           </span>
         </div>
@@ -78,14 +79,14 @@ defineEmits<{
 
         <!-- Movie Grid -->
         <template v-else>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            <MovieCard
-              v-for="movie in movies"
-              :key="movie.id"
-              :movie="movie"
-              :is-favorite="isFavoriteFn ? isFavoriteFn(movie.id) : false"
-              @toggle-favorite="$emit('toggle-favorite', $event)"
-            />
+          <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
+            <div v-for="movie in movies" :key="movie.id" class="col">
+              <MovieCard
+                :movie="movie"
+                :is-favorite="isFavoriteFn ? isFavoriteFn(movie.id) : false"
+                @toggle-favorite="$emit('toggle-favorite', $event)"
+              />
+            </div>
           </div>
 
           <!-- Pagination -->
