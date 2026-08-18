@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { StarIcon, CalendarIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
-import { HeartIcon as HeartIconOutline } from '@heroicons/vue/24/outline'
 import type { Movie } from '@/types'
 import { formatDate, getRatingColor, getTMDBImageUrl } from '@/utils/formatters'
 
@@ -28,20 +26,18 @@ function toggleFav(event: Event) {
 <template>
   <RouterLink
     :to="{ name: 'movieDetail', params: { id: movie.id } }"
-    class="movie-card group relative bg-white dark:bg-gray-900 rounded-xl overflow-hidden border border-slate-200 dark:border-gray-800 hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-indigo-500/10 dark:hover:shadow-indigo-900/20 hover:-translate-y-1 block cursor-pointer"
+    class="movie-card card h-100 border rounded-3 overflow-hidden text-decoration-none"
   >
     <!-- Poster -->
-    <div class="relative aspect-2/3 overflow-hidden bg-gray-100 dark:bg-gray-800">
+    <div class="poster-wrapper position-relative overflow-hidden bg-body-secondary">
       <img
         v-if="movie.poster_path"
         :src="getTMDBImageUrl(movie.poster_path)!"
         :alt="movie.title"
-        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+        class="card-img-top w-100 h-100 object-fit-cover"
       />
-      <div v-else class="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-gray-800">
-        <svg class="w-16 h-16 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-        </svg>
+      <div v-else class="w-100 h-100 d-flex align-items-center justify-content-center bg-body-secondary">
+        <i class="bi bi-film text-body-tertiary" style="font-size: 3rem;"></i>
       </div>
 
       <!-- Favorite Button -->
@@ -49,38 +45,36 @@ function toggleFav(event: Event) {
         @click="toggleFav"
         type="button"
         :title="isFavorite ? 'Remove from favorites' : 'Add to favorites'"
-        :class="[
-          'absolute top-2 left-2 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all duration-200 cursor-pointer shadow-md',
-          isFavorite
-            ? 'bg-red-600 hover:bg-red-700 text-white shadow-red-900/50'
-            : 'bg-gray-900/80 hover:bg-gray-900 text-gray-300 hover:text-white border border-gray-700/60 backdrop-blur-sm'
-        ]"
+        class="btn btn-sm position-absolute top-0 start-0 m-2 rounded-circle d-flex align-items-center justify-content-center shadow"
+        :class="isFavorite
+          ? 'btn-danger'
+          : 'btn-dark bg-opacity-75'"
+        style="width: 30px; height: 30px; z-index: 2;"
       >
-        <HeartIconSolid v-if="isFavorite" class="size-4 text-white" />
-        <HeartIconOutline v-else class="size-4" />
+        <i class="bi" :class="isFavorite ? 'bi-heart-fill' : 'bi-heart'" style="font-size: 0.75rem;"></i>
       </button>
 
       <!-- Rating Badge -->
-      <div class="absolute top-2 right-2 flex items-center gap-1 bg-gray-900/90 backdrop-blur-sm rounded-full px-2 py-1 border border-gray-700">
-        <StarIcon class="size-3.5 text-yellow-400" />
-        <span :class="['text-xs font-bold', getRatingColor(movie.vote_average)]">
+      <div class="position-absolute top-0 end-0 m-2 d-flex align-items-center gap-1 bg-dark bg-opacity-75 rounded-pill px-2 py-1 border border-secondary-subtle" style="z-index: 2;">
+        <i class="bi bi-star-fill text-warning" style="font-size: 0.7rem;"></i>
+        <span :class="['small fw-bold', getRatingColor(movie.vote_average)]">
           {{ movie.vote_average.toFixed(1) }}
         </span>
       </div>
 
       <!-- Hover Overlay -->
-      <div class="absolute inset-0 bg-linear-to-t from-gray-900 via-gray-900/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 pointer-events-none">
-        <p class="text-gray-300 text-xs line-clamp-3 leading-relaxed">{{ movie.overview }}</p>
+      <div class="card-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3" style="background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3), transparent); pointer-events: none;">
+        <p class="text-white-50 small mb-0 line-clamp-3 lh-sm">{{ movie.overview }}</p>
       </div>
     </div>
 
     <!-- Info -->
-    <div class="p-3">
-      <h3 class="text-slate-900 dark:text-white font-semibold text-sm leading-tight line-clamp-2 mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-300 transition-colors">
+    <div class="card-body p-2 p-sm-3">
+      <h5 class="card-title small fw-semibold mb-2 line-clamp-2 lh-sm">
         {{ movie.title }}
-      </h3>
-      <div class="flex items-center gap-1 text-slate-500 dark:text-gray-500 text-xs">
-        <CalendarIcon class="size-3.5 text-slate-400 dark:text-gray-600" />
+      </h5>
+      <div class="d-flex align-items-center gap-1 text-body-secondary" style="font-size: 0.75rem;">
+        <i class="bi bi-calendar3"></i>
         <span>{{ formatDate(movie.release_date) }}</span>
       </div>
     </div>

@@ -10,16 +10,20 @@ withDefaults(
 </script>
 
 <template>
-  <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+  <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
     <div
       v-for="i in count"
       :key="i"
-      class="bg-gray-900 rounded-xl overflow-hidden animate-pulse border border-gray-800"
+      class="col"
     >
-      <div class="aspect-2/3 bg-gray-800"></div>
-      <div class="p-3 space-y-2">
-        <div class="h-4 bg-gray-800 rounded w-3/4"></div>
-        <div class="h-3 bg-gray-800 rounded w-1/2"></div>
+      <div class="card border rounded-3 overflow-hidden skeleton-pulse">
+        <div class="poster-wrapper bg-body-secondary"></div>
+        <div class="card-body p-3">
+          <div class="placeholder-glow">
+            <span class="placeholder col-9 rounded mb-2"></span>
+            <span class="placeholder col-6 rounded"></span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
