@@ -41,15 +41,15 @@ function onPageClick(page: number) {
 <template>
   <div class="d-flex flex-column align-items-center gap-2 mt-5">
     <nav aria-label="Movie pagination">
-      <ul class="pagination mb-0">
+      <ul class="pagination pagination-sm mb-0 align-items-stretch">
         <!-- Prev Button -->
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <button
-            class="page-link d-flex align-items-center gap-1"
+            class="page-link h-100 d-flex align-items-center gap-1"
             @click="onPageClick(currentPage - 1)"
             :disabled="currentPage === 1"
           >
-            <i class="bi bi-chevron-left small"></i>
+            <i class="bi bi-chevron-left"></i>
             <span class="d-none d-sm-inline">Prev</span>
           </button>
         </li>
@@ -62,7 +62,7 @@ function onPageClick(page: number) {
           :class="{ active: currentPage === page }"
         >
           <button
-            class="page-link fw-semibold"
+            class="page-link h-100 d-flex align-items-center fw-semibold"
             @click="onPageClick(page)"
           >
             {{ page }}
@@ -71,7 +71,7 @@ function onPageClick(page: number) {
 
         <!-- Ellipsis -->
         <li v-if="lastVisiblePage < totalPages" class="page-item disabled">
-          <span class="page-link">...</span>
+          <span class="page-link h-100 d-flex align-items-center">...</span>
         </li>
 
         <!-- Last Page -->
@@ -81,7 +81,7 @@ function onPageClick(page: number) {
           :class="{ active: currentPage === totalPages }"
         >
           <button
-            class="page-link fw-semibold"
+            class="page-link h-100 d-flex align-items-center fw-semibold"
             @click="onPageClick(totalPages)"
           >
             {{ totalPages }}
@@ -91,12 +91,12 @@ function onPageClick(page: number) {
         <!-- Next Button -->
         <li class="page-item" :class="{ disabled: currentPage === totalPages }">
           <button
-            class="page-link d-flex align-items-center gap-1"
+            class="page-link h-100 d-flex align-items-center gap-1"
             @click="onPageClick(currentPage + 1)"
             :disabled="currentPage === totalPages"
           >
             <span class="d-none d-sm-inline">Next</span>
-            <i class="bi bi-chevron-right small"></i>
+            <i class="bi bi-chevron-right"></i>
           </button>
         </li>
       </ul>
