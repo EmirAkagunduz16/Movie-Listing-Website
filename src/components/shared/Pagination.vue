@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/vue/24/solid'
 import { computed } from 'vue'
 
 const props = defineProps<{
@@ -40,63 +39,71 @@ function onPageClick(page: number) {
 </script>
 
 <template>
-  <div class="mt-12 flex flex-col items-center gap-4">
-    <div class="flex items-center justify-center gap-2">
-      <!-- Prev Button -->
-      <button
-        @click="onPageClick(currentPage - 1)"
-        :disabled="currentPage === 1"
-        class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gray-800 text-gray-300 text-sm font-medium border border-gray-700 hover:bg-gray-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
-      >
-        <ChevronLeftIcon class="size-4" />
-        <span class="hidden sm:inline">Prev</span>
-      </button>
+  <div class="d-flex flex-column align-items-center gap-2 mt-5">
+    <nav aria-label="Movie pagination">
+      <ul class="pagination mb-0">
+        <!-- Prev Button -->
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <button
+            class="page-link d-flex align-items-center gap-1"
+            @click="onPageClick(currentPage - 1)"
+            :disabled="currentPage === 1"
+          >
+            <i class="bi bi-chevron-left small"></i>
+            <span class="d-none d-sm-inline">Prev</span>
+          </button>
+        </li>
 
-      <!-- Page Numbers -->
-      <div class="flex items-center gap-1">
-        <button
+        <!-- Page Numbers -->
+        <li
           v-for="page in visiblePages"
           :key="page"
-          @click="onPageClick(page)"
-          :class="[
-            'w-9 h-9 rounded-lg text-sm font-semibold transition-all duration-150',
-            currentPage === page
-              ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-900/50'
-              : 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700 hover:text-white'
-          ]"
+          class="page-item"
+          :class="{ active: currentPage === page }"
         >
-          {{ page }}
-        </button>
+          <button
+            class="page-link fw-semibold"
+            @click="onPageClick(page)"
+          >
+            {{ page }}
+          </button>
+        </li>
 
-        <span v-if="lastVisiblePage < totalPages" class="text-gray-600 px-1">...</span>
+        <!-- Ellipsis -->
+        <li v-if="lastVisiblePage < totalPages" class="page-item disabled">
+          <span class="page-link">...</span>
+        </li>
 
-        <button
+        <!-- Last Page -->
+        <li
           v-if="lastVisiblePage < totalPages"
-          @click="onPageClick(totalPages)"
-          :class="[
-            'w-9 h-9 rounded-lg text-sm font-semibold transition-all duration-150',
-            currentPage === totalPages
-              ? 'bg-indigo-600 text-white'
-              : 'bg-gray-800 text-gray-400 border border-gray-700 hover:bg-gray-700 hover:text-white'
-          ]"
+          class="page-item"
+          :class="{ active: currentPage === totalPages }"
         >
-          {{ totalPages }}
-        </button>
-      </div>
+          <button
+            class="page-link fw-semibold"
+            @click="onPageClick(totalPages)"
+          >
+            {{ totalPages }}
+          </button>
+        </li>
 
-      <!-- Next Button -->
-      <button
-        @click="onPageClick(currentPage + 1)"
-        :disabled="currentPage === totalPages"
-        class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-gray-800 text-gray-300 text-sm font-medium border border-gray-700 hover:bg-gray-700 hover:text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
-      >
-        <span class="hidden sm:inline">Next</span>
-        <ChevronRightIcon class="size-4" />
-      </button>
-    </div>
+        <!-- Next Button -->
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <button
+            class="page-link d-flex align-items-center gap-1"
+            @click="onPageClick(currentPage + 1)"
+            :disabled="currentPage === totalPages"
+          >
+            <span class="d-none d-sm-inline">Next</span>
+            <i class="bi bi-chevron-right small"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
 
     <!-- Page info -->
-    <p class="text-center text-xs text-gray-600">
+    <p class="text-body-tertiary small mb-0">
       Page {{ currentPage }} of {{ totalPages }}
     </p>
   </div>
