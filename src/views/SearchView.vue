@@ -4,7 +4,6 @@ import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
 import MovieListLayout from '@/components/layout/MovieListLayout.vue'
 import { useMovieStore } from '@/stores/movieStore'
-import { MagnifyingGlassIcon, FilmIcon } from '@heroicons/vue/24/outline'
 
 const route = useRoute()
 const router = useRouter()
@@ -70,25 +69,25 @@ function onRetry() {
   >
     <!-- Custom Empty State for Search -->
     <template #empty>
-      <div
-        class="flex flex-col items-center justify-center py-20 px-4 bg-gray-900/40 rounded-2xl border border-gray-800 text-center"
-      >
-        <div class="w-16 h-16 rounded-2xl bg-gray-800 flex items-center justify-center mb-4 text-indigo-400">
-          <MagnifyingGlassIcon class="size-8" />
+      <div class="card border rounded-3 text-center py-5 px-4">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-center rounded-3 bg-body-secondary mx-auto mb-3" style="width: 64px; height: 64px;">
+            <i class="bi bi-search text-indigo fs-3"></i>
+          </div>
+          <h3 class="fs-5 fw-bold mb-2">
+            {{ queryParam ? `No Movies Found for "${queryParam}"` : 'Type a Movie Title to Search' }}
+          </h3>
+          <p class="text-body-secondary small mb-4 mx-auto" style="max-width: 400px;">
+            {{ queryParam ? 'Try checking for spelling errors or searching with a different movie name.' : 'Use the search bar above to discover films across the entire TMDB catalog.' }}
+          </p>
+          <RouterLink
+            to="/"
+            class="btn btn-indigo d-inline-flex align-items-center gap-2"
+          >
+            <i class="bi bi-film"></i>
+            <span>Browse Popular Movies</span>
+          </RouterLink>
         </div>
-        <h3 class="text-xl font-bold text-white mb-2">
-          {{ queryParam ? `No Movies Found for "${queryParam}"` : 'Type a Movie Title to Search' }}
-        </h3>
-        <p class="text-gray-400 text-sm max-w-md mb-6">
-          {{ queryParam ? 'Try checking for spelling errors or searching with a different movie name.' : 'Use the search bar above to discover films across the entire TMDB catalog.' }}
-        </p>
-        <RouterLink
-          to="/"
-          class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-medium text-sm rounded-xl transition-colors shadow-lg"
-        >
-          <FilmIcon class="size-4" />
-          <span>Browse Popular Movies</span>
-        </RouterLink>
       </div>
     </template>
   </MovieListLayout>
