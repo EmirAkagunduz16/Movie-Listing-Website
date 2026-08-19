@@ -2,8 +2,6 @@
 import { watch, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { storeToRefs } from 'pinia'
-import { StarIcon, CalendarIcon, ClockIcon, HeartIcon as HeartIconSolid } from '@heroicons/vue/24/solid'
-import { HeartIcon as HeartIconOutline, ArrowLeftIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/layout/Navbar.vue'
 import AppFooter from '@/components/layout/AppFooter.vue'
 import MovieCard from '@/components/movie/MovieCard.vue'
@@ -50,180 +48,178 @@ function goBack() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-950 text-white flex flex-col justify-between">
-    <div>
+  <div class="d-flex flex-column min-vh-100">
+    <div class="flex-grow-1">
       <Navbar />
 
       <!-- Loading State -->
-      <div v-if="movieLoading"
-           class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-pulse">
-        <div class="flex flex-col md:flex-row gap-8 items-start">
-          <div class="w-64 sm:w-80 aspect-2/3 bg-gray-800 rounded-2xl"></div>
-          <div class="flex-1 space-y-4 w-full">
-            <div class="h-4 bg-gray-800 rounded w-1/4"></div>
-            <div class="h-10 bg-gray-800 rounded w-3/4"></div>
-            <div class="flex gap-3">
-              <div class="h-8 w-20 bg-gray-800 rounded-full"></div>
-              <div class="h-8 w-28 bg-gray-800 rounded-full"></div>
-              <div class="h-8 w-24 bg-gray-800 rounded-full"></div>
+      <div v-if="movieLoading" class="container py-5">
+        <div class="row g-4 align-items-start">
+          <div class="col-12 col-md-4">
+            <div class="poster-wrapper bg-body-secondary rounded-3 skeleton-pulse"></div>
+          </div>
+          <div class="col-12 col-md-8">
+            <div class="placeholder-glow">
+              <span class="placeholder col-3 rounded mb-3 d-block"></span>
+              <span class="placeholder col-8 rounded mb-3 d-block" style="height: 2.5rem;"></span>
+              <div class="d-flex gap-2 mb-3">
+                <span class="placeholder rounded-pill" style="width: 80px; height: 32px;"></span>
+                <span class="placeholder rounded-pill" style="width: 110px; height: 32px;"></span>
+                <span class="placeholder rounded-pill" style="width: 90px; height: 32px;"></span>
+              </div>
+              <span class="placeholder col-12 rounded" style="height: 80px;"></span>
             </div>
-            <div class="h-20 bg-gray-800 rounded w-full"></div>
           </div>
         </div>
       </div>
 
       <!-- Error State -->
-      <div v-else-if="error"
-           class="max-w-4xl mx-auto px-4 py-20 text-center">
-        <p class="text-red-400 text-lg mb-6">{{ error }}</p>
-        <button @click="movieStore.fetchMovieDetails(movieId)"
-                class="inline-flex items-center gap-2 px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-white font-medium transition-colors">
-          <ArrowPathIcon class="size-4" />
-          <span>Retry Loading</span>
-        </button>
+      <div v-else-if="error" class="container py-5">
+        <div class="text-center py-5">
+          <p class="text-danger fs-5 mb-4">{{ error }}</p>
+          <button
+            @click="movieStore.fetchMovieDetails(movieId)"
+            class="btn btn-indigo d-inline-flex align-items-center gap-2"
+          >
+            <i class="bi bi-arrow-clockwise"></i>
+            <span>Retry Loading</span>
+          </button>
+        </div>
       </div>
 
       <!-- Movie Details Content -->
-      <div v-else-if="currentMovie"
-           class="relative">
+      <div v-else-if="currentMovie" class="position-relative">
         <!-- Backdrop Banner with Overlay -->
-        <div class="relative min-h-[70vh] flex items-center overflow-hidden">
+        <div class="position-relative overflow-hidden" style="min-height: 70vh;">
           <!-- Backdrop Image -->
-          <div v-if="currentMovie.backdrop_path"
-               class="absolute inset-0 bg-cover bg-center opacity-25 scale-105 filter blur-sm transform transition-all duration-700"
-               :style="{ backgroundImage: `url(${getTMDBImageUrl(currentMovie.backdrop_path, 'original')})` }"></div>
-          <div class="absolute inset-0 bg-linear-to-t from-gray-950 via-gray-950/80 to-gray-950/40"></div>
+          <div
+            v-if="currentMovie.backdrop_path"
+            class="detail-backdrop"
+            :style="{ backgroundImage: `url(${getTMDBImageUrl(currentMovie.backdrop_path, 'original')})` }"
+          ></div>
+          <div class="detail-gradient"></div>
 
           <!-- Main Content Container -->
-          <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full">
-
+          <div class="position-relative container py-4 py-md-5" style="z-index: 2;">
             <!-- Back Button -->
-            <button @click="goBack"
-                    class="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-white mb-8 transition-colors bg-gray-900/60 backdrop-blur-md px-3.5 py-1.5 rounded-lg border border-gray-800 cursor-pointer">
-              <ArrowLeftIcon class="size-4" />
+            <button
+              @click="goBack"
+              class="btn btn-sm btn-outline-light d-inline-flex align-items-center gap-2 mb-4 opacity-75"
+            >
+              <i class="bi bi-arrow-left"></i>
               <span>Back to Movies</span>
             </button>
 
-            <div class="flex flex-col md:flex-row gap-8 lg:gap-12 items-center md:items-start">
-
+            <div class="row g-4 g-lg-5 align-items-center align-items-md-start">
               <!-- Movie Poster -->
-              <div
-                   class="shrink-0 w-64 sm:w-80 shadow-2xl rounded-2xl overflow-hidden border border-gray-800/80 bg-gray-900 group">
-                <img v-if="currentMovie.poster_path"
-                     :src="getTMDBImageUrl(currentMovie.poster_path, 'w500')!"
-                     :alt="currentMovie.title"
-                     class="w-full h-auto object-cover rounded-2xl shadow-indigo-950/30" />
-                <div v-else
-                     class="w-full aspect-2/3 flex items-center justify-center bg-gray-800">
-                  <svg class="w-20 h-20 text-gray-600"
-                       fill="none"
-                       stroke="currentColor"
-                       viewBox="0 0 24 24">
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1"
-                          d="M7 4v16M17 4v16M3 8h4m10 0h4M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
-                  </svg>
+              <div class="col-8 col-sm-6 col-md-4 mx-auto mx-md-0">
+                <div class="rounded-3 overflow-hidden shadow-lg border border-secondary-subtle">
+                  <img
+                    v-if="currentMovie.poster_path"
+                    :src="getTMDBImageUrl(currentMovie.poster_path, 'w500')!"
+                    :alt="currentMovie.title"
+                    class="img-fluid w-100"
+                  />
+                  <div v-else class="poster-wrapper d-flex align-items-center justify-content-center bg-body-secondary">
+                    <i class="bi bi-film text-body-tertiary" style="font-size: 4rem;"></i>
+                  </div>
                 </div>
               </div>
 
               <!-- Movie Details Info -->
-              <div class="flex-1 text-left">
-
+              <div class="col-12 col-md-8">
                 <!-- Tagline -->
-                <p v-if="currentMovie.tagline"
-                   class="text-indigo-400 italic text-base font-medium mb-1">
+                <p v-if="currentMovie.tagline" class="text-indigo fst-italic fw-medium mb-1">
                   "{{ currentMovie.tagline }}"
                 </p>
 
                 <!-- Title -->
-                <h1
-                    class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4 leading-tight">
+                <h1 class="display-6 fw-bold text-white mb-3 lh-sm">
                   {{ currentMovie.title }}
                 </h1>
 
                 <!-- Meta Badges (Rating, Release Date, Runtime) -->
-                <div class="flex flex-wrap items-center gap-3 mb-6">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                   <!-- Rating Badge -->
-                  <div
-                       class="flex items-center gap-1.5 bg-gray-900/90 backdrop-blur-md border border-gray-700/80 rounded-full px-3.5 py-1.5 text-sm font-bold">
-                    <StarIcon class="size-4 text-yellow-400" />
-                    <span :class="getRatingColor(currentMovie.vote_average)">
+                  <span class="badge bg-dark bg-opacity-75 border border-secondary-subtle rounded-pill d-inline-flex align-items-center gap-1 px-3 py-2 fs-6">
+                    <i class="bi bi-star-fill text-warning"></i>
+                    <span :class="getRatingColor(currentMovie.vote_average)" class="fw-bold">
                       {{ currentMovie.vote_average.toFixed(1) }}
                     </span>
-                  </div>
+                  </span>
 
                   <!-- Release Date Badge -->
-                  <div
-                       class="flex items-center gap-1.5 bg-gray-900/90 backdrop-blur-md border border-gray-700/80 rounded-full px-3.5 py-1.5 text-sm font-medium text-gray-300">
-                    <CalendarIcon class="size-4 text-gray-400" />
-                    <span>{{ formatDate(currentMovie.release_date) }}</span>
-                  </div>
+                  <span class="badge bg-dark bg-opacity-75 border border-secondary-subtle rounded-pill d-inline-flex align-items-center gap-1 px-3 py-2 fw-medium text-body-secondary">
+                    <i class="bi bi-calendar3"></i>
+                    {{ formatDate(currentMovie.release_date) }}
+                  </span>
 
                   <!-- Runtime Badge -->
-                  <div v-if="currentMovie.runtime"
-                       class="flex items-center gap-1.5 bg-gray-900/90 backdrop-blur-md border border-gray-700/80 rounded-full px-3.5 py-1.5 text-sm font-medium text-gray-300">
-                    <ClockIcon class="size-4 text-gray-400" />
-                    <span>{{ formatRuntime(currentMovie.runtime) }}</span>
-                  </div>
+                  <span
+                    v-if="currentMovie.runtime"
+                    class="badge bg-dark bg-opacity-75 border border-secondary-subtle rounded-pill d-inline-flex align-items-center gap-1 px-3 py-2 fw-medium text-body-secondary"
+                  >
+                    <i class="bi bi-clock"></i>
+                    {{ formatRuntime(currentMovie.runtime) }}
+                  </span>
                 </div>
 
                 <!-- Genre Pills -->
-                <div v-if="currentMovie.genres && currentMovie.genres.length > 0"
-                     class="flex flex-wrap gap-2 mb-6">
-                  <span v-for="genre in currentMovie.genres"
-                        :key="genre.id"
-                        class="bg-indigo-950/70 text-indigo-300 border border-indigo-800/60 rounded-full px-3.5 py-1 text-xs font-semibold tracking-wide">
+                <div v-if="currentMovie.genres && currentMovie.genres.length > 0" class="d-flex flex-wrap gap-2 mb-3">
+                  <span
+                    v-for="genre in currentMovie.genres"
+                    :key="genre.id"
+                    class="badge rounded-pill bg-indigo bg-opacity-25 text-indigo border border-indigo px-3 py-2 small fw-semibold"
+                    style="--bs-bg-opacity: 0.15; border-color: rgba(99, 102, 241, 0.4) !important;"
+                  >
                     {{ genre.name }}
                   </span>
                 </div>
 
                 <!-- Overview Section -->
-                <div class="mb-8">
-                  <h2 class="text-lg font-bold text-white mb-2">Overview</h2>
-                  <p class="text-gray-300 text-sm sm:text-base leading-relaxed max-w-3xl">
+                <div class="mb-4">
+                  <h2 class="fs-5 fw-bold text-white mb-2">Overview</h2>
+                  <p class="text-white-50 lh-lg" style="max-width: 720px;">
                     {{ currentMovie.overview || 'No overview available for this movie.' }}
                   </p>
                 </div>
 
                 <!-- Action Button: Add to Favorites -->
                 <div>
-                  <button @click="toggleFav"
-                          :class="[
-                            'inline-flex items-center gap-2.5 px-5 py-2.5 rounded-xl border font-medium text-sm transition-all duration-200 shadow-lg cursor-pointer',
-                            isFav
-                              ? 'bg-red-600 hover:bg-red-500 text-white border-red-500 shadow-red-950/50'
-                              : 'bg-gray-900 hover:bg-indigo-600 text-white border-gray-700 hover:border-indigo-500 shadow-gray-950/50'
-                          ]">
-                    <HeartIconSolid v-if="isFav"
-                                    class="size-4 text-white" />
-                    <HeartIconOutline v-else
-                                      class="size-4 text-gray-300" />
+                  <button
+                    @click="toggleFav"
+                    class="btn d-inline-flex align-items-center gap-2 shadow"
+                    :class="isFav
+                      ? 'btn-danger'
+                      : 'btn-outline-light'"
+                  >
+                    <i class="bi" :class="isFav ? 'bi-heart-fill' : 'bi-heart'"></i>
                     <span>{{ isFav ? 'Remove from Favorites' : 'Add to Favorites' }}</span>
                   </button>
                 </div>
-
               </div>
-
             </div>
-
           </div>
         </div>
 
         <!-- Similar Movies Section -->
-        <div v-if="similarMovies && similarMovies.length > 0"
-             class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-gray-900">
-          <div class="flex items-center gap-3 mb-8">
-            <div class="w-1 h-7 rounded-full bg-indigo-500"></div>
-            <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Similar Movies</h2>
+        <div
+          v-if="similarMovies && similarMovies.length > 0"
+          class="container py-4 py-md-5 border-top border-secondary-subtle"
+        >
+          <div class="d-flex align-items-center gap-2 mb-4">
+            <div class="rounded-pill bg-indigo" style="width: 4px; height: 28px;"></div>
+            <h2 class="fs-5 fw-bold mb-0">Similar Movies</h2>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-            <MovieCard v-for="movie in similarMovies"
-                       :key="movie.id"
-                       :movie="movie"
-                       :is-favorite="movieStore.isFavorite(movie.id)"
-                       @toggle-favorite="movieStore.toggleFavorite" />
+          <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-5 row-cols-xl-6 g-3">
+            <div v-for="movie in similarMovies" :key="movie.id" class="col">
+              <MovieCard
+                :movie="movie"
+                :is-favorite="movieStore.isFavorite(movie.id)"
+                @toggle-favorite="movieStore.toggleFavorite"
+              />
+            </div>
           </div>
         </div>
       </div>
