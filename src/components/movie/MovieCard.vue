@@ -58,7 +58,7 @@ function toggleFav(event: Event) {
       <div class="position-absolute top-0 end-0 m-2 d-flex align-items-center gap-1 bg-dark bg-opacity-75 rounded-pill px-2 py-1 border border-secondary-subtle" style="z-index: 2;">
         <i class="bi bi-star-fill text-warning" style="font-size: 0.7rem;"></i>
         <span :class="['small fw-bold', getRatingColor(movie.vote_average)]">
-          {{ movie.vote_average.toFixed(1) }}
+          {{ (movie.vote_average ?? 0).toFixed(1) }}
         </span>
       </div>
 

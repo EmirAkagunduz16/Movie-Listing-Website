@@ -148,7 +148,7 @@ function goBack() {
                   >
                     <i class="bi bi-star-fill text-warning"></i>
                     <span :class="getRatingColor(currentMovie.vote_average)" class="fw-bold">
-                      {{ currentMovie.vote_average.toFixed(1) }}
+                      {{ (currentMovie.vote_average ?? 0).toFixed(1) }}
                     </span>
                   </span>
 

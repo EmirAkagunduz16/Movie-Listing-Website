@@ -14,9 +14,10 @@ export function formatRuntime(minutes: number | undefined | null): string {
   return `${mins}m`
 }
 
-export function getRatingColor(rating: number): string {
-  if (rating >= 7.5) return 'text-rating-high'
-  if (rating >= 6) return 'text-rating-mid'
+export function getRatingColor(rating: number | undefined | null): string {
+  const score = rating ?? 0
+  if (score >= 7.5) return 'text-rating-high'
+  if (score >= 6) return 'text-rating-mid'
   return 'text-rating-low'
 }
 
