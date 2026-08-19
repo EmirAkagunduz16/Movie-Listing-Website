@@ -169,8 +169,7 @@ function goBack() {
                   <span
                     v-for="genre in currentMovie.genres"
                     :key="genre.id"
-                    class="badge rounded-pill bg-indigo bg-opacity-25 text-indigo border border-indigo px-3 py-2 small fw-semibold"
-                    style="--bs-bg-opacity: 0.15; border-color: rgba(99, 102, 241, 0.4) !important;"
+                    class="badge rounded-pill genre-pill px-3 py-2 fw-semibold"
                   >
                     {{ genre.name }}
                   </span>
