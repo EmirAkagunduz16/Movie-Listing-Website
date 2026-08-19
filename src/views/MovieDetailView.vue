@@ -90,7 +90,7 @@ function goBack() {
       <!-- Movie Details Content -->
       <div v-else-if="currentMovie" class="position-relative">
         <!-- Backdrop Banner with Overlay -->
-        <div class="position-relative overflow-hidden" style="min-height: 70vh;">
+        <div class="detail-hero-section position-relative overflow-hidden" style="min-height: 70vh;">
           <!-- Backdrop Image -->
           <div
             v-if="currentMovie.backdrop_path"
@@ -104,7 +104,8 @@ function goBack() {
             <!-- Back Button -->
             <button
               @click="goBack"
-              class="btn btn-sm btn-outline-light d-inline-flex align-items-center gap-2 mb-4 opacity-75"
+              class="btn btn-sm btn-outline-light d-inline-flex align-items-center gap-2 mb-4"
+              style="background-color: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2);"
             >
               <i class="bi bi-arrow-left"></i>
               <span>Back to Movies</span>
@@ -129,7 +130,7 @@ function goBack() {
               <!-- Movie Details Info -->
               <div class="col-12 col-md-8">
                 <!-- Tagline -->
-                <p v-if="currentMovie.tagline" class="text-indigo fst-italic fw-medium mb-1">
+                <p v-if="currentMovie.tagline" class="fst-italic fw-medium mb-1" style="color: #a5b4fc;">
                   "{{ currentMovie.tagline }}"
                 </p>
 
@@ -141,7 +142,10 @@ function goBack() {
                 <!-- Meta Badges (Rating, Release Date, Runtime) -->
                 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
                   <!-- Rating Badge -->
-                  <span class="badge bg-dark bg-opacity-75 border border-secondary-subtle rounded-pill d-inline-flex align-items-center gap-1 px-3 py-2 fs-6">
+                  <span
+                    class="badge rounded-pill d-inline-flex align-items-center gap-1.5 px-3 py-2 fs-6 text-white"
+                    style="background-color: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.18);"
+                  >
                     <i class="bi bi-star-fill text-warning"></i>
                     <span :class="getRatingColor(currentMovie.vote_average)" class="fw-bold">
                       {{ currentMovie.vote_average.toFixed(1) }}
@@ -149,18 +153,22 @@ function goBack() {
                   </span>
 
                   <!-- Release Date Badge -->
-                  <span class="badge bg-dark bg-opacity-75 border border-secondary-subtle rounded-pill d-inline-flex align-items-center gap-1 px-3 py-2 fw-medium text-body-secondary">
-                    <i class="bi bi-calendar3"></i>
-                    {{ formatDate(currentMovie.release_date) }}
+                  <span
+                    class="badge rounded-pill d-inline-flex align-items-center gap-1.5 px-3 py-2 fs-6 text-white"
+                    style="background-color: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.18);"
+                  >
+                    <i class="bi bi-calendar3 opacity-75"></i>
+                    <span>{{ formatDate(currentMovie.release_date) }}</span>
                   </span>
 
                   <!-- Runtime Badge -->
                   <span
                     v-if="currentMovie.runtime"
-                    class="badge bg-dark bg-opacity-75 border border-secondary-subtle rounded-pill d-inline-flex align-items-center gap-1 px-3 py-2 fw-medium text-body-secondary"
+                    class="badge rounded-pill d-inline-flex align-items-center gap-1.5 px-3 py-2 fs-6 text-white"
+                    style="background-color: rgba(255, 255, 255, 0.12); border: 1px solid rgba(255, 255, 255, 0.18);"
                   >
-                    <i class="bi bi-clock"></i>
-                    {{ formatRuntime(currentMovie.runtime) }}
+                    <i class="bi bi-clock opacity-75"></i>
+                    <span>{{ formatRuntime(currentMovie.runtime) }}</span>
                   </span>
                 </div>
 
@@ -178,7 +186,7 @@ function goBack() {
                 <!-- Overview Section -->
                 <div class="mb-4">
                   <h2 class="fs-5 fw-bold text-white mb-2">Overview</h2>
-                  <p class="text-white-50 lh-lg" style="max-width: 720px;">
+                  <p class="lh-lg mb-0" style="color: #cbd5e1; max-width: 720px;">
                     {{ currentMovie.overview || 'No overview available for this movie.' }}
                   </p>
                 </div>
@@ -187,10 +195,8 @@ function goBack() {
                 <div>
                   <button
                     @click="toggleFav"
-                    class="btn d-inline-flex align-items-center gap-2 shadow"
-                    :class="isFav
-                      ? 'btn-danger'
-                      : 'btn-outline-light'"
+                    class="btn d-inline-flex align-items-center gap-2 px-4 py-2.5 rounded-3 fw-semibold shadow-sm"
+                    :class="isFav ? 'btn-danger' : 'btn-indigo'"
                   >
                     <i class="bi" :class="isFav ? 'bi-heart-fill' : 'bi-heart'"></i>
                     <span>{{ isFav ? 'Remove from Favorites' : 'Add to Favorites' }}</span>
