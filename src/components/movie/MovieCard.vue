@@ -64,7 +64,7 @@ function toggleFav(event: Event) {
 
       <!-- Hover Overlay -->
       <div class="card-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-end p-3" style="background: linear-gradient(to top, rgba(0,0,0,0.85), rgba(0,0,0,0.3), transparent); pointer-events: none;">
-        <p class="text-white-50 small mb-0 line-clamp-3 lh-sm">{{ movie.overview }}</p>
+        <p class="text-white-60 small mb-0 line-clamp-3 lh-sm">{{ movie.overview }}</p>
       </div>
     </div>
 
