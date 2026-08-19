@@ -90,7 +90,7 @@ function goBack() {
       <!-- Movie Details Content -->
       <div v-else-if="currentMovie" class="position-relative">
         <!-- Backdrop Banner with Overlay -->
-        <div class="detail-hero-section position-relative overflow-hidden" style="min-height: 70vh;">
+        <div class="detail-hero-section position-relative overflow-hidden">
           <!-- Backdrop Image -->
           <div
             v-if="currentMovie.backdrop_path"
